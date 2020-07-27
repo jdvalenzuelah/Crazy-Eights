@@ -2,15 +2,16 @@ from card_deck.deck import Deck
 from card_deck.suits import Suits
 from card_deck.ranks import Ranks
 from card_deck.card import Card
-from game.player import Player
-from game.turn import Turn
-from game.exceptions import *
+from player import Player
+from turn import Turn
+from exceptions import *
 from typing import List
 
 class CrazyEights():
 
     def __init__(self, players: List[str]):
         self.deck = Deck.make_french_deck()
+        self.waiting_for_suit_change = False
         self.deck.shuffle()
         self.players = [Player(players[i], i) for i in range(len(players)) ]
     
@@ -31,7 +32,7 @@ class CrazyEights():
         return self.turn_state
 
     def _is_valid_move(self, card: Card):
-        return card.suit == self.turn_state.current_card.suit or self._is_wildcard(card) # if same number can place card?
+        return card.suit == self.turn_state.current_card.suit or card.rank == self.turn_state.current_card.rank or self._is_wildcard(card)
 
     def _is_wildcard(self, card: Card):
         return card.rank == Ranks.EIGHT
@@ -47,7 +48,7 @@ class CrazyEights():
         if not self._is_valid_move(card):
             raise InvalidMoveException()
 
-        if card not in self.players[player_id].player_deck:
+        if card not in self.players[player_id].player_deck.cards:
             raise CardNotOnDeckException()
 
         if self._is_wildcard(card):

@@ -23,4 +23,7 @@ class Deck:
     def place_at_bottom(self, card: Card):
         if card not in self.cards:
             self.cards.append(card)
+    
+    def remove(self, card: Card):
+        self.cards.remove(card)
 
