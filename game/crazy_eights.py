@@ -7,12 +7,18 @@ from turn import Turn
 from exceptions import *
 from typing import List
 
+"""
+TODO: Defined and detect tied game
+TODO: Keep track of player's scores
+TODO: Take cards from game deck (max 3)
+"""
 class CrazyEights():
 
     def __init__(self, players: List[str]):
         self.deck = Deck.make_french_deck()
         self.waiting_for_suit_change = False
         self.deck.shuffle()
+        self.winner = None
         self.players = [Player(players[i], i) for i in range(len(players)) ]
     
     def deal_cards(self, qty: int = 5):
@@ -39,6 +45,9 @@ class CrazyEights():
 
     def make_move(self, player_id: int, card: Card):
 
+        if self.is_game_finished():
+            raise GameAlreadyFinishedException()
+
         if self.waiting_for_suit_change:
             raise WaitingForSuitChangeException()
         
@@ -56,6 +65,9 @@ class CrazyEights():
         
         self.players[player_id].player_deck.remove(card)
 
+        if self.players[player_id].player_deck.is_empty():
+            self.winner = self.players[player_id]
+
         self.turn_state = Turn( (self.turn_state.current_player_turn_id + 1) % len(self.players), card )
 
         return self.turn_state
@@ -66,3 +78,6 @@ class CrazyEights():
 
         self.turn_state.current_card.suit = new_suit
         self.waiting_for_suit_change = False
+    
+    def is_game_finished(self):
+        return self.winner == None

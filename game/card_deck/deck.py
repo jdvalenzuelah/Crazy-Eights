@@ -26,4 +26,7 @@ class Deck:
     
     def remove(self, card: Card):
         self.cards.remove(card)
+    
+    def is_empty(self):
+        return len(self.cards) == 0
 
