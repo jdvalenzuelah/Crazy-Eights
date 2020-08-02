@@ -26,6 +26,13 @@ class CrazyEights():
             cards = [self.deck.take_last() for _ in range(qty)]
             player.player_deck = Deck(cards)
     
+    def get_playerid_from_username(self, username: str):
+        for player in self.players:
+            if player.name == username:
+                return player.turn_id
+        else:
+            return None
+    
     def start_game(self):
         
         if not len(self.players):
