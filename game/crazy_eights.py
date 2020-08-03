@@ -11,6 +11,7 @@ from typing import List
 TODO: Defined and detect tied game
 TODO: Keep track of player's scores
 TODO: Take cards from game deck (max 3)
+TODO: Define and Implement game interface
 """
 class CrazyEights():
 
@@ -87,4 +88,4 @@ class CrazyEights():
         self.waiting_for_suit_change = False
     
     def is_game_finished(self):
-        return self.winner == None
+        return self.winner != None
