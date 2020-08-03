@@ -75,11 +75,14 @@ class CrazyEights():
 
         if self.players[player_id].player_deck.is_empty():
             self.winner = self.players[player_id]
-
+        
         self.turn_state = Turn( (self.turn_state.current_player_turn_id + 1) % len(self.players), card )
 
         return self.turn_state
     
+    def needs_suit_change(self):
+        return self.waiting_for_suit_change
+
     def change_suit(self, new_suit: Suits):
         if not self.waiting_for_suit_change:
             raise NotWaitingForSuitChangeException()
@@ -89,3 +92,11 @@ class CrazyEights():
     
     def is_game_finished(self):
         return self.winner != None
+    
+    def get_player(self, turn_id):
+        if len(self.players) > turn_id:
+            return self.players[turn_id]
+    
+    def take_from_deck(self, turn_id):
+        if len(self.players) > turn_id:
+            self.players[turn_id].player_deck.cards.append(self.deck.take_last())

@@ -1,5 +1,6 @@
 from crazy_eights import CrazyEights
 from card_deck.card import Card
+from card_deck.suits import Suits
 from exceptions import *
 import collections
 
@@ -37,7 +38,7 @@ class Room():
         if len(self.players.keys()) < 2:
             raise NotEnoughPlayerException()
 
-        if self.rounds == self.played_rounds:
+        if self.is_room_rounds_completed():
             raise RoomRoundsAlreadyCompletedException()
 
         if self.game:
@@ -53,8 +54,29 @@ class Room():
         for username in self.players:
             self.players[username] = 0
     
+    def is_game_finished(self):
+        return self.game.is_game_finished()
+    
+    def is_room_rounds_completed(self):
+        self.played_rounds == self.rounds
+    
     def move(self, username: str, move: Card):
-        return self.game.make_move(self.game.get_playerid_from_username(username), card)
+        return self.game.make_move(self.game.get_playerid_from_username(username), move)
+    
+    def get_current_game_state(self):
+        if self.game:
+            return self.game.turn_state
+    
+    def take_from_deck(self, username):
+        self.game.take_from_deck( self.game.get_playerid_from_username(username) )
+
+# --- test ----
+def card_str_h(card):
+    return f'{card.rank.value} {card.suit.value}'
+
+def print_deck(deck):
+    for i in range(len(deck.cards)):
+        print(f'{i}. {card_str_h(deck.cards[i])}')
 
 if __name__ == "__main__":
     room = Room(2)
@@ -62,4 +84,27 @@ if __name__ == "__main__":
     room.add_new_player('Marcos')
     room.add_new_player('Fernando')
     room.start_game()
-    print(room.game)
+
+    while not room.is_room_rounds_completed():
+        print('  ---- Inicio de ronda ------ ')
+        while not room.is_game_finished():
+            current_state = room.get_current_game_state()
+            current_player = room.game.get_player(current_state.current_player_turn_id)
+
+            print(f'Turno de {current_player.name} Carta en el maso {card_str_h(current_state.current_card)}')
+            print('Cartas del jugador:')
+            print_deck(current_player.player_deck)
+            card_pos = int(input('Ingresa numero de carta a colocar o -1 para tomar del maso: '))
+            if card_pos >  -1:
+                room.move(current_player.name, current_player.player_deck.cards[card_pos])
+                if room.game.needs_suit_change():
+                    print('Cambio de carta necesario')
+                    va_suits = [e for e in Suits]
+                    for i in range(len(va_suits)):
+                        print(f'{i}. {va_suits[i].value}')
+                    change = int(input('Ingrese el numero de carta a cambiar: '))
+                    room.game.change_suit(va_suits[change])
+            else:
+                room.take_from_deck(current_player.name)
+        print(f'Ganador ronda: {room.game.winner}')
+
