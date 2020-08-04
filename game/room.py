@@ -33,7 +33,9 @@ class Room():
             raise InvalidUserNameException()
 
         self.players[username.replace(' ', '_')] = 0
-    
+
+
+
     def start_game(self):
         if len(self.players.keys()) < 2:
             raise NotEnoughPlayerException()
@@ -69,6 +71,8 @@ class Room():
     
     def take_from_deck(self, username):
         self.game.take_from_deck( self.game.get_playerid_from_username(username) )
+
+
 
 # --- test ----
 def card_str_h(card):
