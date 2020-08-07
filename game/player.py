@@ -6,5 +6,4 @@ from typing import List
 class Player:
     name: str
     turn_id: int
-    current_score: int = 0
     player_deck: Deck = Deck()
