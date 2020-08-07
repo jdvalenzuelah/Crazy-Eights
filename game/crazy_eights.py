@@ -31,6 +31,7 @@ class CrazyEights():
         for player in self.players:
             if player.name == username:
                 return player.turn_id
+                
         else:
             return None
     
@@ -75,6 +76,10 @@ class CrazyEights():
 
         if self.players[player_id].player_deck.is_empty():
             self.winner = self.players[player_id]
+        
+        if self.players[player_id] == self.winner:
+            Player.current_score=Player.current_score+1
+
         
         self.turn_state = Turn( (self.turn_state.current_player_turn_id + 1) % len(self.players), card )
 
