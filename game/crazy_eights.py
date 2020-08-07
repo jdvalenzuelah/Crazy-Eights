@@ -9,9 +9,7 @@ from typing import List
 
 """
 TODO: Defined and detect tied game
-TODO: Keep track of player's scores
 TODO: Take cards from game deck (max 3)
-TODO: Define and Implement game interface
 """
 class CrazyEights():
 
@@ -76,10 +74,6 @@ class CrazyEights():
 
         if self.players[player_id].player_deck.is_empty():
             self.winner = self.players[player_id]
-        
-        if self.players[player_id] == self.winner:
-            Player.current_score=Player.current_score+1
-
         
         self.turn_state = Turn( (self.turn_state.current_player_turn_id + 1) % len(self.players), card )
 
