@@ -19,6 +19,6 @@ class Turn(CrazyClass):
         if len(data) < 3 or not data[0].isnumeric():
             return None
         
-        card = Card.parse(f'{data[1]},{data[1]}')
+        card = Card.parse(f'{data[1]},{data[2]}')
 
         return Turn(int(data[0]), card)

@@ -43,4 +43,4 @@ class Deck(CrazyClass):
 
         if None in (result := [Card.parse(card) for card in data]):
             return None
-        return result
+        return Deck(result)

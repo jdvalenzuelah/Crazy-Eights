@@ -1,5 +1,5 @@
 import dataclasses
-from crazy_class import CrazyClass
+from game_service.crazy_serializer.crazy_class import CrazyClass
 
 class CrazySerializer:
 
@@ -8,7 +8,5 @@ class CrazySerializer:
             return None
         return data.serialize()
         
-    def parse(self, data: str) -> CrazyClass:
-        if not isinstance(data, CrazyClass):
-            return None
-        return data.parse(data)
+    def parse(self, data: str, target: CrazyClass) -> CrazyClass:
+        return target.parse(data)
