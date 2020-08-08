@@ -7,6 +7,5 @@ class CrazyClass(ABC):
         pass
 
     @abstractmethod
-    @classmethod
-    def parse(self, data: str) -> CrazyClass:
+    def parse(self, data: str):
         pass
