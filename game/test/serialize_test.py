@@ -31,7 +31,7 @@ class SerializeTest(unittest.TestCase):
     def test_serialize_turn(self):
         turn = Turn(0, Card(Ranks.ACE, Suits.DIAMONDS))
         expected = '0,A,diamonds'
-        elf.assertEqual(self.serializer.serialize(player), expected)
+        self.assertEqual(self.serializer.serialize(turn), expected)
 
 
 if __name__ == "__main__":
