@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from card_deck.suits import Suits
-from card_deckranks import Ranks
-#from game_service.crazy_serializer.crazy_class import CrazyClass
+from card_deck.ranks import Ranks
+from game_service.crazy_serializer.crazy_class import CrazyClass
 
 @dataclass
-class Card:
+class Card(CrazyClass):
     rank: Ranks
     suit: Suits
 
