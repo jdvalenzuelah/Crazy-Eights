@@ -4,9 +4,10 @@ from typing import List
 from card_deck.suits import Suits
 from card_deck.ranks import Ranks
 from card_deck.card import Card
+from game_service.crazy_serializer.crazy_class import CrazyClass
 
 @dataclass
-class Deck:
+class Deck(CrazyClass):
     cards: List[Card] = field(default_factory=lambda: [])
 
     @staticmethod
@@ -29,4 +30,17 @@ class Deck:
     
     def is_empty(self):
         return len(self.cards) == 0
+    
+    def serialize(self):
+        elements = ';'.join(value.serialize() for value in self.cards)
+        return f'[{elements}]'
+    
+    @classmethod
+    def parse(self, data):
+        if not data.startswith('[') or not data.endswith(']'):
+            return None
+        data = data[1:-1].split(';')
 
+        if None in (result := [Card.parse(card) for card in data]):
+            return None
+        return Deck(result)

@@ -14,3 +14,9 @@ class Ranks(Enum):
     JACK = 'J'
     QUEEN = 'Q'
     KING = 'K'
+
+    @classmethod
+    def from_string(self, name: str):
+        for rank in Ranks:
+            if rank.value == name:
+                return rank

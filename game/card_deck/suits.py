@@ -5,3 +5,9 @@ class Suits(Enum):
     DIAMONDS = 'diamonds'
     HEARTS = 'hearts'
     SPADES = 'spades'
+
+    @classmethod
+    def from_string(self, name: str):
+        for suit in Suits:
+            if suit.value == name:
+                return suit

@@ -2,9 +2,9 @@ from card_deck.deck import Deck
 from card_deck.suits import Suits
 from card_deck.ranks import Ranks
 from card_deck.card import Card
-from player import Player
-from turn import Turn
-from exceptions import *
+from core.player import Player
+from core.turn import Turn
+from core.exceptions import *
 from typing import List
 
 """
