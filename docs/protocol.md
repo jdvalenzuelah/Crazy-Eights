@@ -16,7 +16,7 @@ Message is defined in two parts:
 | EST_CONN       | Establish connection               | 00    |                                  |
 | ACK_CONN       | Acknowledge connection             | 01    |                                  |
 | NEW_USER       | Create new user                    | 02    | <userid>                         |
-| NEW_ROOM       | Create new room                    | 03    |                                  |
+| NEW_ROOM       | Create new room                    | 03    | <rounds_n>                       |
 | JOIN_ROOM      | Join a room                        | 04    | <userid>,<room_id>               |
 | START_GAME     | Start a new game (must be on room) | 05    | <userdi>,<room_id>               |
 | GAME_MOVE      | New game move                      | 06    | <userid>,<card_rank>,<card_suit> |
@@ -31,7 +31,7 @@ Message is defined in two parts:
 |---------------|-------------------------------|-------|----------------------------------|
 | ACK_CONN      | Acknowledge client connection | 11    |                                  |
 | USER_CREATED  | User created                  | 12    | <userid>                         |
-| ROOM_CREATED  | Room created                  | 13    | <roomid>,<room_admin_id>         |
+| ROOM_CREATED  | Room created                  | 13    | <roomid>                         |
 | JOINED_ROOM   | Joined new room               | 14    | <roomid>                         |
 | GAME_STARTED  | Started a new game            | 15    | <roomid>,<game_deck>             |
 | YOUR_TURN     | New game turn                 | 16    | <card_rank>,<card_suit>          |

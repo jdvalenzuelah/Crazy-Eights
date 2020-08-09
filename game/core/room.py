@@ -1,4 +1,4 @@
-from crazy_eights import CrazyEights
+from .crazy_eights import CrazyEights
 from card_deck.card import Card
 from card_deck.suits import Suits
 from exceptions import *
@@ -84,7 +84,13 @@ class Room():
         return winner
     
     def game_needs_suit_change(self):
-        return self.game.needs_suit_change()        
+        return self.game.needs_suit_change()
+
+    def get_players_deck(self):
+        players = {}
+        for name in self.players.keys():
+            players[name] = self.game.get_player(self.game.get_playerid_from_username(name)).player_deck
+        return players
 
 
 

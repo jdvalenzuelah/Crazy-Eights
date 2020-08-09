@@ -1,10 +1,9 @@
 from card_deck.deck import Deck
 from dataclasses import dataclass
 from typing import List
-from game_service.crazy_serializer.crazy_class import CrazyClass
 
 @dataclass
-class Player(CrazyClass):
+class Player:
     name: str
     turn_id: int
     player_deck: Deck = Deck()
