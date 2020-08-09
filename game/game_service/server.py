@@ -118,9 +118,9 @@ class Server:
     
     def get_response(self, type: ServerMsgType, **kwargs) -> str:
         if type == ServerMsgType.ROOM_CREATED:
-            return f'{type.value},{kwargs["room_id"]}'
+            return f'{type.value}.{kwargs["room_id"]}'
         elif type == ServerMsgType.JOINED_ROOM:
-            return f'{type.value},{kwargs["room_id"]}'
+            return f'{type.value}.{kwargs["room_id"]}'
     
     def new_room(self, room: Room, userid, conn):
         logging.info('Creating new room')
@@ -152,14 +152,14 @@ class Server:
         for id in decks.keys():
             logging.debug(f'sending deck to {id}')
             ser_deck = decks[id].serialize()
-            res = f'{ServerMsgType.GAME_STARTED.value},{room_id},{ser_deck},{current_card}'
+            res = f'{ServerMsgType.GAME_STARTED.value}.{room_id},{ser_deck},{current_card}'
             conns[id].sendall(res.encode(ENCONDING))
     
     def send_turn(self, room_id):
         logging.info(f'Sending turn from room {room_id}')
         current_state, _, current_player_conn = self.get_current_state(room_id)
         sr_card = current_state.current_card.serialize()
-        res = f'{ServerMsgType.YOUR_TURN.value},{sr_card}'
+        res = f'{ServerMsgType.YOUR_TURN.value}.{sr_card}'
         current_player_conn.sendall(res.encode(ENCONDING))
     
     def get_current_state(self, room_id):
@@ -192,7 +192,7 @@ class Server:
         current_card = current_state.current_card.serialize()
         for id in conns.keys():
             logging.debug(f'sending move to {id}')
-            res = f'{ServerMsgType.NEW_GAME_MOVE},{room_id},{current_card}'
+            res = f'{ServerMsgType.NEW_GAME_MOVE}.{room_id},{current_card}'
             conns[id].sendall(res.encode(ENCONDING))
         
     def change_suit(self, room_id, suit: Suits):
