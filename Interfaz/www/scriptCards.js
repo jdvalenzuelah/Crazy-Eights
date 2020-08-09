@@ -1,0 +1,4 @@
+function callPython()
+{
+	eel.hello()
+}	
