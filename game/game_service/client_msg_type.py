@@ -12,6 +12,7 @@ class ClientMsgType(Enum):
     LEAVE_ROOM = '08'
     CLOSE_ROOM = '09'
     DISCONNECT = '10'
+    SUIT_CHANGE = '26'
 
     @classmethod
     def from_string(self, name: str):
