@@ -20,10 +20,10 @@ Message is defined in two parts:
 | JOIN_ROOM      | Join a room                        | 04    | <userid>,<room_id>                |
 | START_GAME     | Start a new game (must be on room) | 05    | <userdi>,<room_id>                |
 | GAME_MOVE      | New game move                      | 06    | <room_id>,<card_rank>,<card_suit> |
-| GET_CARD_STACK | Get card from the game stack       | 07    | <card_rank>,<card_suit>           |
+| GET_CARD_STACK | Get card from the game stack       | 07    | <room_id>                         |
 | CLOSE_ROOM     | Close a room                       | 09    | <userid>,<room_id>                |
 | DISCONNECT     | Disconnect from server             | 10    | <userid>                          |
-| SUIT_CHANGE    | New suit change                    | 26    | <card_suit>                       |
+| SUIT_CHANGE    | New suit change                    | 26    | <room_id>,<card_suit>             |
 
 ## Received by Client (send by server)
 

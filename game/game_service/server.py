@@ -20,6 +20,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 ENCONDING = 'utf-8'
 
+"""
+TODO: Exception handling
+"""
 class Server:
 
     def __init__(self, host: str, port: int):
@@ -88,7 +91,9 @@ class Server:
                         break
                     elif req_type == ClientMsgType.NEW_USER:
                         logging.info(f'Creating new user {req}')
-                        userid = req.split(',')[1]
+                        userid = req.split('.')[1]
+                        res = f'{ServerMsgType.USER_CREATED.value}.{userid}'
+                        conn.sendall(res.encode(ENCONDING))
                     else:
                         res = self.process_request(req_type, req, userid, conn)
                         logging.debug(res)
@@ -98,29 +103,40 @@ class Server:
     
     def process_request(self, req_type: ClientMsgType, req: str, userid: str, conn):
         if req_type == ClientMsgType.NEW_ROOM:
-            rounds = req.split(',')[1]
+            rounds = req.split('.')[1]
             room = Room(int(rounds))
             room.add_new_player(userid)
             room_id =  self.new_room(room, userid, conn)
             return self.get_response(ServerMsgType.ROOM_CREATED, room_id=room_id)
         elif req_type == ClientMsgType.JOIN_ROOM:
-            data = req.split(',')
-            self.join_room(data[2], data[1], conn)
-            return self.get_response(ServerMsgType.JOINED_ROOM, room_id=data[2])
+            data = req.split('.')[1].split(',')
+            self.join_room(data[1], data[0], conn)
+            return self.get_response(ServerMsgType.JOINED_ROOM, room_id=data[1])
         elif req_type == ClientMsgType.START_GAME:
-            self.start_game_and_send_decks(req.split(',')[2])
-            self.send_turn(req.split(',')[2])
+            room_id = req.split('.')[1].split(',')[1]
+            self.start_game_and_send_decks(room_id)
+            self.send_turn(room_id)
         elif req_type == ClientMsgType.GAME_MOVE:
-            data = req.split(',')
-            room_id = data[1]
-            card = Card.parse(f'{data[2]},{data[3]}')
+            data = req.split('.')[1].split(',')
+            room_id = data[0]
+            card = Card.parse(f'{data[1]},{data[2]}')
             self.new_move(room_id, userid, card)
+        elif req_type == ClientMsgType.SUIT_CHANGE:
+            data = req.split('.')
+            suit = Suits.from_string(data[2])
+            self.change_suit(data[1], suit)
+        elif req_type == ClientMsgType.GET_CARD_STACK:
+            data = req.split('.')
+            card = self.take_from_deck(data[1], userid)
+            return self.get_response(ServerMsgType.STACK_CARD, card=card)
     
     def get_response(self, type: ServerMsgType, **kwargs) -> str:
         if type == ServerMsgType.ROOM_CREATED:
             return f'{type.value}.{kwargs["room_id"]}'
         elif type == ServerMsgType.JOINED_ROOM:
             return f'{type.value}.{kwargs["room_id"]}'
+        elif type == ServerMsgType.STACK_CARD:
+            return f'{type.value}.{kwargs["card"].serialize()}'
     
     def new_room(self, room: Room, userid, conn):
         logging.info('Creating new room')
@@ -137,9 +153,10 @@ class Server:
         self.room_pool[room_id].connection_pool[userid] = conn
         self.rooms_mutex.release()
     
-    def get_players_deck(self, room_id: str):
+    def get_players_deck(self, room_id: str, start: bool = False):
         self.rooms_mutex.acquire()
-        self.room_pool[room_id].room.start_game()
+        if start:
+            self.room_pool[room_id].room.start_game()
         decks = self.room_pool[room_id].room.get_players_deck()
         conn_pool = self.room_pool[room_id].connection_pool
         current_state = self.room_pool[room_id].room.get_current_game_state()
@@ -147,7 +164,7 @@ class Server:
         return (decks, conn_pool, current_state)
     
     def start_game_and_send_decks(self, room_id):
-        decks, conns, current_state = self.get_players_deck(room_id)
+        decks, conns, current_state = self.get_players_deck(room_id, start=True)
         current_card = current_state.current_card.serialize()
         for id in decks.keys():
             logging.debug(f'sending deck to {id}')
@@ -196,13 +213,24 @@ class Server:
             conns[id].sendall(res.encode(ENCONDING))
         
     def change_suit(self, room_id, suit: Suits):
-        pass
+        self.rooms_mutex.acquire()
+        self.room_pool[room_id].room.change_game_suit(suit)
+        self.rooms_mutex.release()
+        self.send_suit_change(self, room_id, suit)
 
-    def send_suit_change(self, room_id: str):
-        pass
+    def send_suit_change(self, room_id: str, new_suit: Suits):
+        _, conns, current_state = self.get_players_deck(room_id)
+        current_card = current_state.current_card.serialize()
+        for id in conns.keys():
+            logging.debug(f'sending move to {id}')
+            res = f'{ServerMsgType.SUIT_CHANGE}.{new_suit.value},'
+            conns[id].sendall(res.encode(ENCONDING))
 
-    def take_from_deck(self, room_id: str):
-        pass
+    def take_from_deck(self, room_id: str, userid: str):
+        self.rooms_mutex.acquire()
+        card = self.room_pool[room_id].room.take_from_deck(userid)
+        self.rooms_mutex.release()
+        return card
 
     def send_game_winner(self, room_id: str):
         pass
@@ -212,12 +240,11 @@ class Server:
 
         
     def close(self):
-        logging.debug(f'closing connection')
+        logging.debug('closing connection')
         self.socket.close()
 
 if __name__ == "__main__":
     import sys
-    print(sys.argv)
     _, ip, port = sys.argv
     with Server(ip, int(port)) as server:
         server.start()

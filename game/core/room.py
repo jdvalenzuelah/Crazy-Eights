@@ -70,7 +70,7 @@ class Room():
             return self.game.turn_state
     
     def take_from_deck(self, username):
-        self.game.take_from_deck( self.game.get_playerid_from_username(username) )
+        return self.game.take_from_deck( self.game.get_playerid_from_username(username) )
     
     def get_current_player(self):
         return self.game.get_player(self.get_current_game_state().current_player_turn_id)
