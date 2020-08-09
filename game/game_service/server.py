@@ -107,6 +107,7 @@ class Server:
             return self.get_response(ServerMsgType.JOINED_ROOM, room_id=data[2])
         elif req_type == ClientMsgType.START_GAME:
             self.start_game_and_send_decks(req.split(',')[2])
+            self.send_turn(req.split(',')[2])
     
     def get_response(self, type: ServerMsgType, **kwargs) -> str:
         if type == ServerMsgType.ROOM_CREATED:
@@ -134,16 +135,33 @@ class Server:
         self.room_pool[room_id].room.start_game()
         decks = self.room_pool[room_id].room.get_players_deck()
         conn_pool = self.room_pool[room_id].connection_pool
+        current_state = self.room_pool[room_id].room.get_current_game_state()
         self.rooms_mutex.release()
-        return (decks, conn_pool)
+        return (decks, conn_pool, current_state)
     
     def start_game_and_send_decks(self, room_id):
-        decks, conns = self.get_players_deck(room_id)
+        decks, conns, current_state = self.get_players_deck(room_id)
+        current_card = current_state.current_card.serialize()
         for id in decks.keys():
             logging.debug(f'sending deck to {id}')
             ser_deck = decks[id].serialize()
-            res = f'{ServerMsgType.GAME_STARTED.value},{room_id},{ser_deck}'
+            res = f'{ServerMsgType.GAME_STARTED.value},{room_id},{ser_deck},{current_card}'
             conns[id].sendall(res.encode(ENCONDING))
+    
+    def send_turn(self, room_id):
+        logging.info(f'Sending turn from room {room_id}')
+        current_state, _, current_player_conn = self.get_current_state(room_id)
+        sr_card = current_state.current_card.serialize()
+        res = f'{ServerMsgType.YOUR_TURN.value},{sr_card}'
+        current_player_conn.sendall(res.encode(ENCONDING))
+    
+    def get_current_state(self, room_id):
+        self.rooms_mutex.acquire()
+        current_state = self.room_pool[room_id].room.get_current_game_state()
+        current_player = self.room_pool[room_id].room.get_current_player()
+        current_player_conn = self.room_pool[room_id].connection_pool[current_player.name]
+        self.rooms_mutex.release()
+        return (current_state, current_player, current_player_conn)
         
     def close(self):
         logging.debug(f'closing connection')
