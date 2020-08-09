@@ -12,3 +12,13 @@ class ServerMsgType(Enum):
     OUT_OF_GAME = '19'
     GAME_FINISHED = '20'
     ROOM_CLOSED = '21'
+    ROOM_WINNER = '22'
+    ERROR = '23'
+    SUIT_CHANGE = '24'
+    SUIT_NEEDS_CHANGE = '25'
+
+    @classmethod
+    def from_string(self, name: str):
+        for msg_type in ServerMsgType:
+            if msg_type.value == name:
+                return msg_type

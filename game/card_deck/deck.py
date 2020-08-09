@@ -4,10 +4,9 @@ from typing import List
 from card_deck.suits import Suits
 from card_deck.ranks import Ranks
 from card_deck.card import Card
-from game_service.crazy_serializer.crazy_class import CrazyClass
 
 @dataclass
-class Deck(CrazyClass):
+class Deck:
     cards: List[Card] = field(default_factory=lambda: [])
 
     @staticmethod
