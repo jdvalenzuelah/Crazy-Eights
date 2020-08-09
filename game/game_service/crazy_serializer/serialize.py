@@ -1,5 +1,5 @@
 import dataclasses
-from game_service.crazy_serializer.crazy_class import CrazyClass
+from crazy_serializer.crazy_class import CrazyClass
 
 class CrazySerializer:
 
