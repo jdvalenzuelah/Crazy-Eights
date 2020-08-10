@@ -14,8 +14,7 @@ Message is defined in two parts:
 | type           | description                        | value | message body                      |
 |----------------|------------------------------------|-------|-----------------------------------|
 | EST_CONN       | Establish connection               | 00    |                                   |
-| ACK_CONN       | Acknowledge connection             | 01    |                                   |
-| NEW_USER       | Create new user                    | 02    | <userid>                          |
+| ACK_CONN       | Acknowledge connection             | 01    | <userid>                          |
 | NEW_ROOM       | Create new room                    | 03    | <rounds_n>                        |
 | JOIN_ROOM      | Join a room                        | 04    | <userid>,<room_id>                |
 | START_GAME     | Start a new game (must be on room) | 05    | <userdi>,<room_id>                |

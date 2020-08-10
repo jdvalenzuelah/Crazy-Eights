@@ -71,6 +71,7 @@ class Server:
     def handle_request(self):
         conn = self.get_conn()
         req = conn.recv(1024).decode(ENCONDING)
+        print(req)
         req_type = get_message_type(req)
 
         if req_type == ClientMsgType.EST_CONN:
@@ -83,17 +84,15 @@ class Server:
                 conn.close()
             else:
                 logging.info(f'Accepted connection {conn}')
-                userid = ''
+                logging.info(f'Creating new user {req}')
+                userid = req.split('.')[1]
+                res = f'{ServerMsgType.USER_CREATED.value}.{userid}'
+                conn.sendall(res.encode(ENCONDING))
                 while ( req := conn.recv(1024).decode(ENCONDING) ):
                     logging.debug(f'Incomming request {req}')
                     req_type = get_message_type(req)
                     if req_type == ClientMsgType.DISCONNECT:
-                        break
-                    elif req_type == ClientMsgType.NEW_USER:
-                        logging.info(f'Creating new user {req}')
-                        userid = req.split('.')[1]
-                        res = f'{ServerMsgType.USER_CREATED.value}.{userid}'
-                        conn.sendall(res.encode(ENCONDING))
+                        break                        
                     else:
                         res = self.process_request(req_type, req, userid, conn)
                         logging.debug(res)
