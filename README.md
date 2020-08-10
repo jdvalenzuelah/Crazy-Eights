@@ -22,3 +22,12 @@ To start a cli ui with no dependencies run:
 ```bash
 $ make run-client SERVER_HOST=<ip> SERVER_PORT=<port> USERNAME=<usename>
 ```
+# To run Gui
+Only ejecute 
+```bash
+$ python main.py
+```
+
+## Reference Interface
+Only the graphical interface and animation were taken from references for the implementation. 
+[Github-Interface](https://github.com/einaregilsson/cards.js)
