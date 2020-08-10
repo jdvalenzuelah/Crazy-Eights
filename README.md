@@ -23,7 +23,7 @@ To start a cli ui with no dependencies run:
 $ make run-client SERVER_HOST=<ip> SERVER_PORT=<port> USERNAME=<usename>
 ```
 
-# To run GUI
+## To run GUI
 GUI depends on [Eel](https://github.com/samuelhwilliams/Eel), you need to install requirements first
 ```bash
 $ pip install -r requirements.txt 
