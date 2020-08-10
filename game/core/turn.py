@@ -2,10 +2,9 @@ from dataclasses import dataclass
 from card_deck.card import Card
 from card_deck.ranks import Ranks
 from card_deck.suits import Suits
-from game_service.crazy_serializer.crazy_class import CrazyClass
 
 @dataclass
-class Turn(CrazyClass):
+class Turn:
     current_player_turn_id: int
     current_card: Card
 

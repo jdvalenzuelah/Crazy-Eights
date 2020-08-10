@@ -98,4 +98,6 @@ class CrazyEights():
     
     def take_from_deck(self, turn_id):
         if len(self.players) > turn_id:
-            self.players[turn_id].player_deck.cards.append(self.deck.take_last())
+            last = self.deck.take_last()
+            self.players[turn_id].player_deck.cards.append(last)
+            return last
