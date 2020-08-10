@@ -4,5 +4,5 @@ import eel
 def hello():
 	print('Hello World!')
 
-eel.init('Interface')
+eel.init('gui/Interface')
 eel.start('index.html')
