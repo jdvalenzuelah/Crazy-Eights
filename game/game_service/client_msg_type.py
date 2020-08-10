@@ -3,7 +3,6 @@ from enum import Enum
 class ClientMsgType(Enum):
     EST_CONN = '00'
     ACK_CONN = '01'
-    NEW_USER = '02'
     NEW_ROOM = '03'
     JOIN_ROOM = '04'
     START_GAME = '05'

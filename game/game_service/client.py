@@ -45,10 +45,17 @@ class Client:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(self.server_info)
     
-    def start(self):
+    def get_res_type(self, res: str) -> ServerMsgType:
+        res = res.split('.')
+        return ServerMsgType.from_string(res[0])
+    
+    def register_user(self, userid: str):
+
         logging.info(f'Connection to server {self.server_info}')
+        
         req = f'{ClientMsgType.EST_CONN.value}'
         self.socket.sendall(req.encode(ENCONDING))
+        
         res = self.socket.recv(1024).decode(ENCONDING)
         req_type = self.get_res_type(res)
         
@@ -56,16 +63,8 @@ class Client:
             logging.error('Error stablishing connection to server')
             return self.close()
         
-        req = f'{ClientMsgType.ACK_CONN.value}'
-        self.socket.sendall(req.encode(ENCONDING))
-    
-    def get_res_type(self, res: str) -> ServerMsgType:
-        res = res.split('.')
-        return ServerMsgType.from_string(res[0])
-    
-    def register_user(self, userid: str):
         logging.info(f'Registering user {userid}')
-        req = f'{ClientMsgType.NEW_USER.value}.{userid}'
+        req = f'{ClientMsgType.ACK_CONN.value}.{userid}'
         self.socket.sendall(req.encode(ENCONDING))
 
         res = self.socket.recv(1024).decode(ENCONDING)

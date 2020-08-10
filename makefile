@@ -5,7 +5,7 @@ SERVER_DIR = game/game_service
 SERVER_HOST = 127.0.0.1
 SERVER_PORT = 8080
 
-CLIENT_DIR = ./game/game_service
+CLIENT_DIR = game/game_service
 USERNAME = Crazy
 
 GUI_DIR = ./gui

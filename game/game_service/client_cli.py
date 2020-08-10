@@ -35,7 +35,7 @@ def on_turn(**kwargs):
     current_deck = kwargs["context"].deck
     print_deck(current_deck)
     card_index = int(input('Enter card to place (or -1 to take from stack): '))
-    if card_index > 0:
+    if card_index >= 0:
         kwargs["context"].make_move(current_deck.cards[card_index])
     else:
         kwargs["context"].take_from_stack()
@@ -52,7 +52,6 @@ if __name__ == "__main__":
         client.on('stack_card', on_stack_card)
 
         client.connect()
-        client.start()
         client.register_user(user)
 
         print("Create or join room?")
@@ -72,11 +71,3 @@ if __name__ == "__main__":
             res = 'x'
         
         client.start_game()
-
-        """create_room = input('Create room?')
-        if create_room == '0':
-            client.create_room(5)
-            client.listen()
-        else:
-            client.join_room(create_room)
-            client.start_game()"""
