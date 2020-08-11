@@ -236,6 +236,7 @@ class Server:
 
     def send_game_winner(self, room_id: str):
         pass
+        return 0
 
     def send_room_winner(self, room_id):
         pass
