@@ -29,4 +29,17 @@ class Deck:
     
     def is_empty(self):
         return len(self.cards) == 0
+    
+    def serialize(self):
+        elements = ';'.join(value.serialize() for value in self.cards)
+        return f'[{elements}]'
+    
+    @classmethod
+    def parse(self, data):
+        if not data.startswith('[') or not data.endswith(']'):
+            return None
+        data = data[1:-1].split(';')
 
+        if None in (result := [Card.parse(card) for card in data]):
+            return None
+        return Deck(result)

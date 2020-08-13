@@ -2,16 +2,14 @@ from card_deck.deck import Deck
 from card_deck.suits import Suits
 from card_deck.ranks import Ranks
 from card_deck.card import Card
-from player import Player
-from turn import Turn
-from exceptions import *
+from core.player import Player
+from core.turn import Turn
+from core.exceptions import *
 from typing import List
 
 """
 TODO: Defined and detect tied game
-TODO: Keep track of player's scores
 TODO: Take cards from game deck (max 3)
-TODO: Define and Implement game interface
 """
 class CrazyEights():
 
@@ -105,4 +103,6 @@ class CrazyEights():
     
     def take_from_deck(self, turn_id):
         if len(self.players) > turn_id:
-            self.players[turn_id].player_deck.cards.append(self.deck.take_last())
+            last = self.deck.take_last()
+            self.players[turn_id].player_deck.cards.append(last)
+            return last

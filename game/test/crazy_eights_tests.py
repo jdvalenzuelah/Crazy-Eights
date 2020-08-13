@@ -1,6 +1,7 @@
-from crazy_eights import CrazyEights
-from exceptions import *
-from turn import Turn
+import context
+from core.crazy_eights import CrazyEights
+from core.exceptions import *
+from core.turn import Turn
 from card_deck.card import Card
 from card_deck.ranks import Ranks
 from card_deck.suits import Suits

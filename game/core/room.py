@@ -1,4 +1,4 @@
-from crazy_eights import CrazyEights
+from .crazy_eights import CrazyEights
 from card_deck.card import Card
 from card_deck.suits import Suits
 from exceptions import *
@@ -70,7 +70,29 @@ class Room():
             return self.game.turn_state
     
     def take_from_deck(self, username):
-        self.game.take_from_deck( self.game.get_playerid_from_username(username) )
+        return self.game.take_from_deck( self.game.get_playerid_from_username(username) )
+    
+    def get_current_player(self):
+        return self.game.get_player(self.get_current_game_state().current_player_turn_id)
+    
+    def change_game_suit(self, new_suit: Suits):
+        self.game.change_suit(new_suit)
+    
+    def get_current_game_winner(self):    
+        if (winner := self.game.winner):
+            self.players[winner.name] += 1
+        return winner
+    
+    def game_needs_suit_change(self):
+        return self.game.needs_suit_change()
+
+    def get_players_deck(self):
+        players = {}
+        for name in self.players.keys():
+            players[name] = self.game.get_player(self.game.get_playerid_from_username(name)).player_deck
+        return players
+
+
 
 
 
@@ -93,7 +115,7 @@ if __name__ == "__main__":
         print('  ---- Inicio de ronda ------ ')
         while not room.is_game_finished():
             current_state = room.get_current_game_state()
-            current_player = room.game.get_player(current_state.current_player_turn_id)
+            current_player = room.get_current_player()
 
             print(f'Turno de {current_player.name} Carta en el maso {card_str_h(current_state.current_card)}')
             print('Cartas del jugador:')
@@ -101,14 +123,14 @@ if __name__ == "__main__":
             card_pos = int(input('Ingresa numero de carta a colocar o -1 para tomar del maso: '))
             if card_pos >  -1:
                 room.move(current_player.name, current_player.player_deck.cards[card_pos])
-                if room.game.needs_suit_change():
+                if room.game_needs_suit_change():
                     print('Cambio de carta necesario')
                     va_suits = [e for e in Suits]
                     for i in range(len(va_suits)):
                         print(f'{i}. {va_suits[i].value}')
                     change = int(input('Ingrese el numero de carta a cambiar: '))
-                    room.game.change_suit(va_suits[change])
+                    room.change_game_suit(va_suits[change])
             else:
                 room.take_from_deck(current_player.name)
-        print(f'Ganador ronda: {room.game.winner}')
+        print(f'Ganador ronda: {room.get_current_game_winner()}')
 
