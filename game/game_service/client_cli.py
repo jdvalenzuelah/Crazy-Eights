@@ -1,4 +1,5 @@
 from client import Client
+from card_deck.suits import Suits
 import logging
 
 
@@ -40,6 +41,19 @@ def on_turn(**kwargs):
     else:
         kwargs["context"].take_from_stack()
 
+def on_suit_change(**kwargs):
+    print("Needs suit change!")
+    suits = []
+    for suit in Suits:
+        suits.append(suit)
+        print(f'{len(suits) - 1}. {suit.value}')
+    while (selected := int(input("Select one: "))) not in range(len(suits)):
+        selected = -1
+    kwargs["context"].change_suit(suits[selected])
+
+def suit_change(**kwargs):
+    print(f'Suit has been changed to {kwargs["new_suit"]}!')
+
 if __name__ == "__main__":
     import sys
     _, ip, port, user = sys.argv
@@ -50,6 +64,8 @@ if __name__ == "__main__":
         client.on('game_started', on_game_started)
         client.on('your_turn', on_turn)
         client.on('stack_card', on_stack_card)
+        client.on('needs_suit_change', on_suit_change)
+        client.on('suit_change', suit_change)
 
         client.connect()
         client.register_user(user)

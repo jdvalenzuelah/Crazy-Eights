@@ -9,6 +9,7 @@ from client_msg_type import ClientMsgType
 from server_msg_type import ServerMsgType
 from card_deck.deck import Deck
 from card_deck.card import Card
+from card_deck.suits import Suits
 
 ENCONDING = 'utf-8'
 
@@ -117,6 +118,10 @@ class Client:
                 self.game_turn(res)
             elif res_type == ServerMsgType.STACK_CARD:
                 self.receive_stack_card(res)
+            elif res_type == ServerMsgType.SUIT_NEEDS_CHANGE:
+                self.on_needs_suit_change(res)
+            elif res_type == ServerMsgType.SUIT_CHANGE:
+                self.on_suit_change(res)
     
     def game_started(self, data):
         deck = Deck.parse(data[data.find('['):data.find(']')+1])
@@ -126,12 +131,15 @@ class Client:
         self._call_event('game_started', deck=self.deck, current_card=self.current_card)
     
     def game_turn(self, data):
+        print(data)
         card = Card.parse(data.split('.')[1])
         self.current_card = card
         self._call_event('your_turn', current_card=card)
     
     def make_move(self, card: Card):
         if card in self.deck.cards:
+            self.last_played_card = card
+            self.deck.remove(card)
             card = card.serialize()
             req = f'{ClientMsgType.GAME_MOVE.value}.{self.room_id},{card}'
             self.socket.sendall(req.encode(ENCONDING))
@@ -147,27 +155,28 @@ class Client:
         self._call_event('stack_card', new_card=card, current_card=self.current_card)
     
     def on_needs_suit_change(self, data):
-        print(data)
         self._call_event('needs_suit_change')
     
     def on_suit_change(self, data):
-        print(data)
-        self._call_event('suit_change')
+        data = data.split('.')
+        suit = Suits.from_string(data[1])
+        self._call_event('suit_change', new_suit=suit)
+    
+    def change_suit(self, suit: Suits):
+        req = f'{ClientMsgType.SUIT_CHANGE.value}.{self.room_id},{suit.value}'
+        self.socket.sendall(req.encode(ENCONDING))
     
     def on_game_move(self, data):
         print(data)
         self._call_event('game_move')
     
     def on_room_finished(self, data):
-        print(data)
         self._call_event('room_finished')
     
     def on_room_winner(self, data):
-        print(data)
         self._call_event('room_winner')
     
     def on_error(self, data):
-        print(data)
         self._call_event('error')
     
     def on(self, event: str, action: callable):
