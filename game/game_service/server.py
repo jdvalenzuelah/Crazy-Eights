@@ -121,9 +121,9 @@ class Server:
             card = Card.parse(f'{data[1]},{data[2]}')
             self.new_move(room_id, userid, card)
         elif req_type == ClientMsgType.SUIT_CHANGE:
-            data = req.split('.')
-            suit = Suits.from_string(data[2])
-            self.change_suit(data[1], suit)
+            data = req.split('.')[1].split(',')
+            suit = Suits.from_string(data[1])
+            self.change_suit(data[0], suit)
         elif req_type == ClientMsgType.GET_CARD_STACK:
             data = req.split('.')
             card = self.take_from_deck(data[1], userid)
@@ -195,7 +195,8 @@ class Server:
         self.rooms_mutex.release()
 
         if  needs_suit_change:
-            res = f'{ServerMsgType.SUIT_NEEDS_CHANGE}'
+            logging.info(f'Sending suit change to {current_player.name} at {current_player_conn}')
+            res = f'{ServerMsgType.SUIT_NEEDS_CHANGE.value}'
             current_player_conn.sendall(res.encode(ENCONDING))
         else:
             self.send_turn(room_id)
@@ -215,15 +216,17 @@ class Server:
         self.rooms_mutex.acquire()
         self.room_pool[room_id].room.change_game_suit(suit)
         self.rooms_mutex.release()
-        self.send_suit_change(self, room_id, suit)
+        self.send_suit_change(room_id, suit)
 
     def send_suit_change(self, room_id: str, new_suit: Suits):
         _, conns, current_state = self.get_players_deck(room_id)
         current_card = current_state.current_card.serialize()
         for id in conns.keys():
-            logging.debug(f'sending move to {id}')
+            logging.debug(f'sending suit change to {id}')
             res = f'{ServerMsgType.SUIT_CHANGE}.{new_suit.value},'
             conns[id].sendall(res.encode(ENCONDING))
+            
+        self.send_turn(room_id)
 
     def take_from_deck(self, room_id: str, userid: str):
         self.rooms_mutex.acquire()
