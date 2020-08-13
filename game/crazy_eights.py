@@ -96,6 +96,7 @@ class CrazyEights():
         self.waiting_for_suit_change = False
     
     def is_game_finished(self):
+
         return self.winner != None
     
     def get_player(self, turn_id):
