@@ -205,12 +205,15 @@ class Server:
 
 
     def send_move(self, room_id: str):
-        _, conns, current_state = self.get_players_deck(room_id)
+        decks, conns, current_state = self.get_players_deck(room_id)
         current_card = current_state.current_card.serialize()
         for id in conns.keys():
             logging.debug(f'sending move to {id}')
             res = f'{ServerMsgType.NEW_GAME_MOVE}.{room_id},{current_card}'
             conns[id].sendall(res.encode(ENCONDING))
+
+            if decks is None:
+                logging.debug(f'Winner {id}')
         
     def change_suit(self, room_id, suit: Suits):
         self.rooms_mutex.acquire()
