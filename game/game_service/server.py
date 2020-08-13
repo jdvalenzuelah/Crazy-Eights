@@ -80,7 +80,7 @@ class Server:
             req = conn.recv(1024).decode(ENCONDING)
             req_type = get_message_type(req)
             if req_type != ClientMsgType.ACK_CONN:
-                logging.error('Error on handshke, closing connection')
+                logging.error('Error on handshake, closing connection')
                 conn.close()
             else:
                 logging.info(f'Accepted connection {conn}')
@@ -236,7 +236,6 @@ class Server:
 
     def send_game_winner(self, room_id: str):
         pass
-        return 0
 
     def send_room_winner(self, room_id):
         pass
