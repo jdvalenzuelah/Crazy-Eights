@@ -80,7 +80,7 @@ class Server:
             req = conn.recv(1024).decode(ENCONDING)
             req_type = get_message_type(req)
             if req_type != ClientMsgType.ACK_CONN:
-                logging.error('Error on handshke, closing connection')
+                logging.error('Error on handshake, closing connection')
                 conn.close()
             else:
                 logging.info(f'Accepted connection {conn}')
@@ -192,12 +192,15 @@ class Server:
         current_player_conn = self.room_pool[room_id].connection_pool[current_player.name]
         self.room_pool[room_id].room.move(userid, card)
         needs_suit_change = self.room_pool[room_id].room.game_needs_suit_change()
+        is_game_finished = self.room_pool[room_id].room.is_game_finished()
         self.rooms_mutex.release()
 
         if  needs_suit_change:
             logging.info(f'Sending suit change to {current_player.name} at {current_player_conn}')
             res = f'{ServerMsgType.SUIT_NEEDS_CHANGE.value}'
             current_player_conn.sendall(res.encode(ENCONDING))
+        elif is_game_finished:
+            self.send_game_winner(room_id)
         else:
             self.send_turn(room_id)
         
@@ -235,7 +238,13 @@ class Server:
         return card
 
     def send_game_winner(self, room_id: str):
-        pass
+        self.rooms_mutex.acquire()
+        get_winner = self.room_pool[room_id].room.get_current_game_winner()
+        self.rooms_mutex.release()
+        for id in conns.keys():
+            if get_winner:
+                logging.info(f'The winner: {id}')
+
 
     def send_room_winner(self, room_id):
         pass
