@@ -192,12 +192,15 @@ class Server:
         current_player_conn = self.room_pool[room_id].connection_pool[current_player.name]
         self.room_pool[room_id].room.move(userid, card)
         needs_suit_change = self.room_pool[room_id].room.game_needs_suit_change()
+        is_game_finished = self.room_pool[room_id].room.is_game_finished()
         self.rooms_mutex.release()
 
         if  needs_suit_change:
             logging.info(f'Sending suit change to {current_player.name} at {current_player_conn}')
             res = f'{ServerMsgType.SUIT_NEEDS_CHANGE.value}'
             current_player_conn.sendall(res.encode(ENCONDING))
+        elif is_game_finished:
+            self.send_game_winner(room_id)
         else:
             self.send_turn(room_id)
         
