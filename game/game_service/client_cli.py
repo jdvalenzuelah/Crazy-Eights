@@ -31,6 +31,9 @@ def on_stack_card(**kwargs):
     on_turn(**kwargs)
 
 def on_turn(**kwargs):
+    if not kwargs["current_card"]:
+        print("None card")
+        return
     print(f'Your turn. Current card: {card_str_h(kwargs["current_card"])}')
     print(f'Your deck:')
     current_deck = kwargs["context"].deck
