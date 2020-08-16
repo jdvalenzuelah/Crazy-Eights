@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 ```
 
 ```bash
-$ make run-gui
+$ make run-gui SERVER_HOST=<ip> SERVER_PORT=<port>
 ```
 
 ## Reference Interface
