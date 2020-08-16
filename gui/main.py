@@ -38,7 +38,7 @@ fist deck
 """
 def on_game_starter(**kwargs):
 	kwargs["deck"]
-	eel.deck(kwargs["deck"])
+	
 
 
 """
@@ -47,18 +47,21 @@ player deck
 def deck(**kwargs):
 	logging.debug((f'card on deck {kwargs["deck"]}'))
 	kwargs["deck"]
+	eel.deck(kwargs["deck"])
 
 """
 current card
 """
 def current_card(**kwargs):
 	logging.debug((f'current card {kwargs["current_card"]}'))
+	eel.current_card(kwargs["current_card"])
 
 """
 stack card 
 """
 def stack_card(**kwargs):
 	logging.debug((f'current card {kwargs["new_card"]}'))
+	eel.stack_card(kwargs["new_card"])
 
 """
 room id
