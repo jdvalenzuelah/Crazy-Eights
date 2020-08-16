@@ -2,6 +2,14 @@ const STANDARD = 0;
 const EUCHRE = 1;
 const PINOCHLE = 2;
 
+
+eel.expose(deck);
+function deck(deck){
+  console.debug(`your deck is ${deck}`)
+}
+
+
+
 var cards = (function() {
   //The global options
   var opt = {
