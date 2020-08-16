@@ -38,6 +38,7 @@ fist deck
 """
 def on_game_starter(**kwargs):
 	kwargs["deck"]
+	eel.deck(kwargs["deck"])
 
 
 """
