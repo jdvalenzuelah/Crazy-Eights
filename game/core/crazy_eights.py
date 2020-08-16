@@ -7,10 +7,6 @@ from core.turn import Turn
 from core.exceptions import *
 from typing import List
 
-"""
-TODO: Defined and detect tied game
-TODO: Take cards from game deck (max 3)
-"""
 class CrazyEights():
 
     def __init__(self, players: List[str]):

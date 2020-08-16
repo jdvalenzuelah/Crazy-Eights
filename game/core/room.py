@@ -4,10 +4,7 @@ from card_deck.suits import Suits
 from exceptions import *
 import collections
 
-"""
-TODO: Add game loop
-TODO: Keep track of scores and find room winner
-"""
+
 class Room():
 
     def __init__(self, rounds: int):

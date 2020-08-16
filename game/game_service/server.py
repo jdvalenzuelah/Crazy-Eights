@@ -22,9 +22,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 ENCONDING = 'utf-8'
 
-"""
-TODO: Exception handling
-"""
 class Server:
 
     def __init__(self, host: str, port: int):
