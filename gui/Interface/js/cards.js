@@ -3,11 +3,6 @@ const EUCHRE = 1;
 const PINOCHLE = 2;
 
 
-eel.expose(deck);
-function deck(deck){
-  console.debug(`your deck is ${deck}`)
-}
-
 
 
 var cards = (function() {
@@ -401,4 +396,20 @@ var cards = (function() {
 
 if (typeof module !== 'undefined') {
   module.exports = cards;
+}
+
+eel.expose(deck);
+function deck(deck){
+  console.debug(`your deck is ${deck}`)
+}
+
+eel.expose(current_card);
+function current_card(current_card){
+  console.debug(`current card is ${current_card}`)
+}
+
+eel.expose(stack_card);
+function stack_card(new_card){
+  console.debug(`current card is ${new_card}`)
+
 }
