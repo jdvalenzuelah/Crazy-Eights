@@ -21,9 +21,8 @@ function handle_error(err) {
 }
 
 
-
-
 eel.expose(deck);
-function deck (deck){
-    console.debug(`your deck ${deck}`)
+function deck (cards){
+    console.debug(`your deck ${cards}`)
+
 }

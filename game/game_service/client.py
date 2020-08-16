@@ -41,7 +41,10 @@ class Client:
     
     def __exit__(self, type, value, traceback):
         self.close()
-    
+
+    """
+    connect server
+    """
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(self.server_info)
@@ -50,6 +53,7 @@ class Client:
         res = res.split('.')
         return ServerMsgType.from_string(res[0])
     
+
     def register_user(self, userid: str):
 
         logging.info(f'Connection to server {self.server_info}')
