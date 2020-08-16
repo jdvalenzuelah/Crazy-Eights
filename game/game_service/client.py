@@ -3,6 +3,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
 import socket
 import logging
 from .client_msg_type import ClientMsgType
@@ -128,11 +129,14 @@ class Client:
                 self.on_suit_change(res)
     
     def game_started(self, data):
+        
+
         deck = Deck.parse(data[data.find('['):data.find(']')+1])
         current_card = Card.parse(f"{data.split(',')[-2]},{data.split(',')[-1]}")
         self.deck = deck
         self.current_card = current_card
         self._call_event('game_started', deck=self.deck, current_card=self.current_card)
+
     
     def game_turn(self, data):
         print(data)

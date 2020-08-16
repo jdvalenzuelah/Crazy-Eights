@@ -38,16 +38,14 @@ def on_user_created(**kwargs):
 """
 fist deck
 """
-def on_game_starter(**kwargs):
-	kwargs["deck"]
-	
+
 
 
 """
 player deck
 """
 def deck(**kwargs):
-	logging.debug((f'\nCurrent card: {card_str_h(kwargs["deck"])}'))
+	logging.debug((f'\nCurrent card: {card_str_h(kwargs["current_card"])}'))
 	kwargs["deck"]
 	eel.deck(kwargs["deck"])
 
@@ -91,6 +89,8 @@ if __name__ == "__main__":
 	
 	with Client(ip, int(port)) as client:
 		client.on('user_created', on_user_created)
+
+		client.game_started("")
 
 		client.connect()
 		
