@@ -89,9 +89,7 @@ if __name__ == "__main__":
 	
 	with Client(ip, int(port)) as client:
 		client.on('user_created', on_user_created)
-
-		client.game_started("")
-
+		
 		client.connect()
 		
 		cw.set_client(client)

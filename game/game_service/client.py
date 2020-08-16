@@ -7,14 +7,14 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import socket
 import logging
 from threading import Thread, Lock
-from threaded import threaded
-from client_msg_type import ClientMsgType
-from server_msg_type import ServerMsgType
+from .threaded import threaded
+from .client_msg_type import ClientMsgType
+from .server_msg_type import ServerMsgType
 from card_deck.deck import Deck
 from card_deck.card import Card
 from card_deck.suits import Suits
-import protocol
-from message import Message
+from .protocol import *
+from .message import Message
 
 #logging.basicConfig(level=logging.DEBUG)
 
@@ -44,6 +44,7 @@ class Client:
         }
         self._res_queue = []
         self.queue_mutex = Lock()
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     def __enter__(self):
         return self
@@ -55,7 +56,6 @@ class Client:
     connect server
     """
     def connect(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(self.server_info)
             
     def add_response_to_queue(self, res: iter):
@@ -72,12 +72,12 @@ class Client:
     def parse_response(self, res: bytes):
         logging.info(f'Parsing incomming res: {res}')
         res = res.decode(ENCONDING)
-        res = protocol.parse_message(res)
+        res = parse_message(res)
         if res:
             self.add_response_to_queue(res)
 
     def format_request(self, req: Message) -> bytes:
-        return protocol.serialize(req).encode(ENCONDING)
+        return serialize(req).encode(ENCONDING)
     
 
     def register_user(self, userid: str):

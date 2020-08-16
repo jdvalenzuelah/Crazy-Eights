@@ -1,11 +1,11 @@
 TEST_DIR = ./game/test
 TEST_FILE_PATTERN = *_test.py
 
-SERVER_DIR = game/game_service
+SERVER_DIR = service
 SERVER_HOST = 127.0.0.1
 SERVER_PORT = 8080
 
-CLIENT_DIR = game/game_service
+CLIENT_DIR = service
 USERNAME = Crazy
 
 GUI_DIR = ./gui

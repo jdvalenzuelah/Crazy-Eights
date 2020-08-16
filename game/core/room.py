@@ -1,7 +1,7 @@
 from .crazy_eights import CrazyEights
 from card_deck.card import Card
 from card_deck.suits import Suits
-from exceptions import *
+from .exceptions import *
 import collections
 
 
