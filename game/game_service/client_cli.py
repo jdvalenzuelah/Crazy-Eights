@@ -57,6 +57,17 @@ def on_suit_change(**kwargs):
 def suit_change(**kwargs):
     print(f'Suit has been changed to {kwargs["new_suit"]}!')
 
+def on_error(**kwargs):
+    print(f'Error {kwargs}')
+
+def on_game_finished(**kwargs):
+    print(f'Game has been completed: {kwargs}')
+
+def on_room_winner(**kwargs):
+    print(f'Room has been completed: {kwargs}')
+    kwargs["context"].close()
+
+
 if __name__ == "__main__":
     import sys
     _, ip, port, user = sys.argv
@@ -69,6 +80,9 @@ if __name__ == "__main__":
         client.on('stack_card', on_stack_card)
         client.on('needs_suit_change', on_suit_change)
         client.on('suit_change', suit_change)
+        client.on('game_finished', on_game_finished)
+        client.on('room_winner', on_room_winner)
+        client.on('error', on_error)
 
         client.connect()
         client.register_user(user)
@@ -81,12 +95,10 @@ if __name__ == "__main__":
             room = input("Enter room id: ")
             client.join_room(room)
             print("Waiting for adming to start game...")
-            client.listen()
+            client.start()
         else:
             rounds = int(input("Enter the number of rounds to play; "))
             client.create_room(rounds)
-        
-        while ( res := input("Start Game? y/n \n") ) not in ["y"]:
-            res = 'x'
-        
-        client.start_game()
+            while ( res := input("Start Game? y/n \n") ) not in ["y"]:
+                res = 'x'
+            client.start_game()

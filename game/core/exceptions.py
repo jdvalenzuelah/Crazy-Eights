@@ -1,41 +1,47 @@
-class NoPlayersException(Exception):
-    pass
+class GameException(Exception):
+    code = '-1'
 
-class NotYourTurnException(Exception):
-    pass
+class NoPlayersException(GameException):
+    code = '00'
 
-class InvalidMoveException(Exception):
-    pass
+class NotYourTurnException(GameException):
+    code = '01'
 
-class CardNotOnDeckException(Exception):
-    pass
+class InvalidMoveException(GameException):
+    code = '02'
 
-class WaitingForSuitChangeException(Exception):
-    pass
+class CardNotOnDeckException(GameException):
+    code = '03'
 
-class NotWaitingForSuitChangeException(Exception):
-    pass
+class WaitingForSuitChangeException(GameException):
+    code = '04'
 
-class InvalidNumberOfPlayersException(Exception):
-    pass
+class NotWaitingForSuitChangeException(GameException):
+    code = '05'
 
-class UserNameAlreadyTakenException(Exception):
-    pass
+class InvalidNumberOfPlayersException(GameException):
+    code = '06' 
 
-class GameAlreadyFinishedException(Exception):
-    pass
+class UserNameAlreadyTakenException(GameException):
+    code = '07'
 
-class InvalidUserNameException(Exception):
-    pass
+class GameAlreadyFinishedException(GameException):
+    code = '08'
 
-class RoomAlreadyFull(Exception):
-    pass
+class InvalidUserNameException(GameException):
+    code = '09'
 
-class NotEnoughPlayerException(Exception):
-    pass
+class RoomAlreadyFull(GameException):
+    code = '10'
 
-class GameAlreadyOnCourseException(Exception):
-    pass
+class NotEnoughPlayerException(GameException):
+    code = '11'
 
-class RoomRoundsAlreadyCompletedException(Exception):
-    pass
+class GameAlreadyOnCourseException(GameException):
+    code = '12'
+
+class RoomRoundsAlreadyCompletedException(GameException):
+    code = '13'
+
+class RoomRoundsNotCompleted(GameException):
+    code = '14'

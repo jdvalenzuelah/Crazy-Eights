@@ -6,7 +6,7 @@ Message is defined in two parts:
 
 ## Format
 ```
-<message type>.<message data>
+<message type>.<message data>$
 ```
 
 ## Received by Server (send by client)
