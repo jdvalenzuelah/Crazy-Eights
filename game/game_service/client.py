@@ -5,8 +5,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import socket
 import logging
-from client_msg_type import ClientMsgType
-from server_msg_type import ServerMsgType
+from .client_msg_type import ClientMsgType
+from .server_msg_type import ServerMsgType
 from card_deck.deck import Deck
 from card_deck.card import Card
 from card_deck.suits import Suits

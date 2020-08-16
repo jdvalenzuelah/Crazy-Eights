@@ -20,4 +20,4 @@ run-client:
 	python3 ${CLIENT_DIR}/client_cli.py ${SERVER_HOST} ${SERVER_PORT} ${USERNAME}
 
 run-gui:
-	python3 ${GUI_DIR}/main.py
+	python3 ${GUI_DIR}/main.py ${SERVER_HOST} ${SERVER_PORT}
