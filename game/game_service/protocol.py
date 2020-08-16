@@ -39,7 +39,7 @@ def parse_server_msg(type: ServerMsgType, data: str) -> Message:
         card = Card.parse(data)
         return Message(type, {"card": card})
     elif type == ServerMsgType.GAME_FINISHED:
-        return Message(type, {"winner": winner})
+        return Message(type, {"winner": data})
     elif type == ServerMsgType.ROOM_CLOSED:
         pass
     elif type == ServerMsgType.ROOM_WINNER:
