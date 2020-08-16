@@ -19,3 +19,11 @@ eel.expose(handle_error);
 function handle_error(err) {
     console.error(err)
 }
+
+
+
+
+eel.expose(deck);
+function deck (deck){
+    console.debug(`your deck ${deck}`)
+}
