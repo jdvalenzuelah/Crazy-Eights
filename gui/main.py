@@ -17,33 +17,61 @@ class wrapper:
 
 cw = wrapper()
 
+"""
+login
+"""
 @eel.expose
 def login(username):
 	global cw
 	logging.debug(f'Username was passed {username}')
 	cw.client.register_user(username)
 
+"""
+created user
+"""
 def on_user_created(**kwargs):
 	logging.info(f'User created {kwargs["username"]}')
 	eel.handle_login(kwargs["username"])
 
+"""
+fist deck
+"""
 def on_game_starter(**kwargs):
 	kwargs["deck"]
 
 
 """
-functions
+player deck
 """
-def stack(**kwargs):
-	logging.debug((f'card on stack {kwargs["current_card"]}'))
-	kwargs["current_card"]
-	on_turn(**kwargs)
+def deck(**kwargs):
+	logging.debug((f'card on deck {kwargs["deck"]}'))
+	kwargs["deck"]
 
+"""
+current card
+"""
+def current_card(**kwargs):
+	logging.debug((f'current card {kwargs["current_card"]}'))
+
+"""
+stack card 
+"""
+def stack_card(**kwargs):
+	logging.debug((f'current card {kwargs["new_card"]}'))
+
+"""
+room id
+"""
+def room_id (**kwargs):
+	logging.debug((f'id room {kwargs["room_id"]}'))
+
+	
+"""
+turn id
+"""
 def on_turn(**kwargs):
 	pass
 
-def deck():
-	pass
 
 
 

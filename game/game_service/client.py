@@ -49,7 +49,10 @@ class Client:
     
     def __exit__(self, type, value, traceback):
         self.close()
-    
+
+    """
+    connect server
+    """
     def connect(self):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.connect(self.server_info)
@@ -75,6 +78,7 @@ class Client:
     def format_request(self, req: Message) -> bytes:
         return protocol.serialize(req).encode(ENCONDING)
     
+
     def register_user(self, userid: str):
 
         logging.info(f'Connection to server {self.server_info}')
