@@ -3,6 +3,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+
 import socket
 import logging
 from threading import Thread, Lock
@@ -187,6 +188,7 @@ class Client:
         self.deck = kwargs['deck']
         self.current_card = kwargs['current_card']
         self._call_event('game_started', deck=self.deck, current_card=self.current_card)
+
     
     def game_turn(self, **kwargs):
         self.current_card = kwargs['card']
