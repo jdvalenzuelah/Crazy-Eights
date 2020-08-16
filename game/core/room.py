@@ -91,6 +91,13 @@ class Room():
         for name in self.players.keys():
             players[name] = self.game.get_player(self.game.get_playerid_from_username(name)).player_deck
         return players
+    
+    def get_room_winner(self):
+        if not self.is_room_rounds_completed():
+            raise RoomRoundsNotCompleted()
+        players = self.players
+        sorted = sorted(players.items(), key=lambda item: item[1])
+        return sorted[0][0]
 
 
 

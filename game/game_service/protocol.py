@@ -45,7 +45,8 @@ def parse_server_msg(type: ServerMsgType, data: str) -> Message:
     elif type == ServerMsgType.ROOM_WINNER:
         pass
     elif type == ServerMsgType.ERROR:
-        pass
+        data = data.split(',')
+        return Message(type, {'code': data[0], 'description': data[1]})
     elif type == ServerMsgType.SUIT_CHANGE:
         suit = Suits.from_string(data)
         return Message(type, {"suit": suit})
@@ -116,14 +117,13 @@ def serialize_server_msg(type: ServerMsgType, **kwargs) -> str:
     elif type == ServerMsgType.YOUR_TURN or type == ServerMsgType.NEW_GAME_MOVE or type == ServerMsgType.STACK_CARD:
         card = kwargs['card'].serialize()
         return serialize_message(type.value, card)
-    elif type == ServerMsgType.GAME_FINISHED:
+    elif type == ServerMsgType.GAME_FINISHED or type == ServerMsgType.ROOM_WINNER:
         return serialize_message(type.value, kwargs['winner'])
     elif type == ServerMsgType.ROOM_CLOSED:
         pass
-    elif type == ServerMsgType.ROOM_WINNER:
-        pass
     elif type == ServerMsgType.ERROR:
-        pass
+        data = f"{kwargs['code']},{kwargs['description']}"
+        return serialize_message(type.value, data)
     elif type == ServerMsgType.SUIT_CHANGE:
         return serialize_message(type.value, kwargs['suit'].value)
     elif type == ServerMsgType.SUIT_NEEDS_CHANGE:
