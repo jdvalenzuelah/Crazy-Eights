@@ -16,7 +16,9 @@ class wrapper:
 		self.client = client
 
 cw = wrapper()
-
+"""
+send data to js
+"""
 """
 login
 """
@@ -45,7 +47,7 @@ def on_game_starter(**kwargs):
 player deck
 """
 def deck(**kwargs):
-	logging.debug((f'card on deck {kwargs["deck"]}'))
+	logging.debug((f'\nCurrent card: {card_str_h(kwargs["deck"])}'))
 	kwargs["deck"]
 	eel.deck(kwargs["deck"])
 
@@ -53,15 +55,21 @@ def deck(**kwargs):
 current card
 """
 def current_card(**kwargs):
-	logging.debug((f'current card {kwargs["current_card"]}'))
+	
+	logging.debug((f'\nCurrent card: {card_str_h(kwargs["current_card"])}'))
 	eel.current_card(kwargs["current_card"])
 
 """
 stack card 
 """
 def stack_card(**kwargs):
-	logging.debug((f'current card {kwargs["new_card"]}'))
+	logging.debug((f'current card {card_str_h(kwargs["new_card"])}'))
 	eel.stack_card(kwargs["new_card"])
+
+
+def card_str_h(card):
+    return f'{card.rank.value} {card.suit.value}'
+
 
 """
 room id
@@ -75,9 +83,6 @@ turn id
 """
 def on_turn(**kwargs):
 	pass
-
-
-
 
 
 if __name__ == "__main__":
