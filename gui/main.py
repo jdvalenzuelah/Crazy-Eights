@@ -60,6 +60,14 @@ def on_game_started(**kwargs):
 	deck = kwargs['deck'].serialize()
 	card = kwargs['current_card'].serialize()
 	eel.on_game_started(deck, card)
+	eel.make_move(deck, card)
+
+def print_deck(deck):
+	for i in range(len(deck.cards)):
+		print(f'{i}. {card_str_h(deck.cards[i])}')
+
+def card_str_h(card):
+	return f'{card.rank.value} {card.suit.value}'
 
 def on_turn(**kwargs):
 	logging.debug(f'Your turn {kwargs}')

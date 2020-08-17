@@ -111,6 +111,27 @@ function on_game_started(player_deck, current_card) {
     });       
 }
 
+eel.expose(make_move);
+function make_move(player_deck, current_card){
+
+    current_card = parse_python_card(current_card);
+    current_card = new cards.Card(current_card.suit, current_card.rank)
+
+    let card = parse_python_deck(player_deck).map(function(el){
+        return new cards.Card(el.suit, el.rank)
+    })
+
+    lowerhand.click(function(card){
+        if(card.suit == discardPile.topCard().suit
+            || card.rank == discardPile.topCard().rank){
+            discardPile.addCard(incomming_deck);
+            discardPile.render();
+            lowerhand.render();
+            console.log(card);
+        }
+    })
+}
+
 ranks_lookup = {
     'A': '1',
     '2': '2',
