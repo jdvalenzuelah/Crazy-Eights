@@ -1,6 +1,7 @@
 
 let username = ""
 let roomid = ""
+let started = false
 
 cards.init({table:'#card-table', type:STANDARD});
 
@@ -30,15 +31,9 @@ lowerhand.click(function(card){
 	}
 })
 
-/** IN PROCESS xD
 deck.click(function(card){
-    if(card == deck.topCard()){
-        lowerhand.addCard(deck.topCard());
-        lowerhand.render();
-        //eel.take_from_stack(card.suit, card.rank)
-    }
+    eel.take_from_stack()
 })
-**/
 
 discardPile = new cards.Deck({faceUp:true});
 discardPile.x += 50;
@@ -121,24 +116,62 @@ function on_game_started(player_deck, current_card) {
     current_card = parse_python_card(current_card);
     current_card = new cards.Card(current_card.suit, current_card.rank)
 
-    deck.deal(5, [upperhand], 50, function() {
+    deck.deal(6, [upperhand], 50, function() {
         tempcard = deck.topCard()
         tempcard.rank = current_card.rank
         tempcard.suit = current_card.suit
 		discardPile.addCard(tempcard);
 		discardPile.render();
-    });       
+    });
+    
+    started = true
 }
 
 eel.expose(receive_card);
 function receive_card(current_card){
     current_card = parse_python_card(current_card);
     current_card = new cards.Card(current_card.suit, current_card.rank);
-    console.log(current_card);
 
-    current_card.showCard();
+    if(started) {
+        upperhand.addCard(deck.topCard())
+        new_card = upperhand.topCard()
+        new_card.suit = current_card.suit
+        new_card.rank= current_card.rank
+        discardPile.addCard(new_card);
+        discardPile.render();
+    }
 
-    
+}
+
+eel.expose(on_stack_card)
+function on_stack_card(card){
+    new_card = parse_python_card(card)
+    new_card = new cards.Card(new_card.suit, new_card.rank);
+
+    temp_card = deck.topCard()
+    temp_card.suit = new_card.suit
+    temp_card.rank = new_card.rank
+
+    lowerhand.addCard(temp_card)
+    lowerhand.render()
+}
+
+$('#modal-change').click(function(){
+    var suit = $( "#suit option:selected" ).val();
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    eel.change_suit(suit)
+})
+
+eel.expose(on_suit_change)
+function on_suit_change() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+}
+
+eel.expose(alert_turn)
+function alert_turn() {
+    alert('Your turn!')
 }
 
 ranks_lookup = {
@@ -183,9 +216,12 @@ function parse_python_card(pcard) {
     }
 }
 
-
-
 eel.expose(handle_error);
 function handle_error(err) {
-    console.error(err)
+    alert(err)
+}
+
+eel.expose(alert_winner)
+function alert_winner(winner) {
+    alert(`Game winner ${winner}`)
 }
