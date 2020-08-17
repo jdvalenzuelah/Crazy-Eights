@@ -35,17 +35,34 @@ def join_room(roomid):
 	logging.debug(f'Joining new room {roomid}')
 	cw.client.join_room(roomid)
 
+@eel.expose
+def start_game():
+	global cw
+	logging.debug('Starting game')
+	cw.client.start_game()
+
 def on_user_created(**kwargs):
 	logging.debug(f'User created {kwargs}')
 	eel.handle_login(kwargs['username'])
 
 def on_room_created(**kwargs):
 	logging.debug(f'Room created {kwargs}')
-	eel.go_to_room()
+	eel.after_created(kwargs['room_id'])
 
 def on_room_joined(**kwargs):
 	logging.debug(f'Joined new room {kwargs}')
-	eel.go_to_room()
+	eel.after_joined(kwargs['room_id'])
+	logging.info("Waiting for adming to start game...")
+	kwargs['context'].start()
+
+def on_game_started(**kwargs):
+	logging.debug(f'Game started {kwargs}')
+	deck = kwargs['deck'].serialize()
+	card = kwargs['current_card'].serialize()
+	eel.on_game_started(deck, card)
+
+def on_turn(**kwargs):
+	logging.debug(f'Your turn {kwargs}')
 
 if __name__ == "__main__":
 	import sys
@@ -55,6 +72,8 @@ if __name__ == "__main__":
 		client.on('user_created', on_user_created)
 		client.on('room_created', on_room_created)
 		client.on('room_joined', on_room_joined)
+		client.on('game_started', on_game_started)
+		client.on('your_turn', on_turn)
 		
 		client.connect()
 		
