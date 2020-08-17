@@ -29,7 +29,8 @@ $ make run-client SERVER_HOST=<ip> SERVER_PORT=<port> USERNAME=<usename>
 
 ## To run GUI
 GUI depends on [Eel](https://github.com/samuelhwilliams/Eel), you need to install requirements first
-Requires google chrome or chromium to run
+
+**Requires google chrome or chromium to run**
 ```bash
 $ pip install -r requirements.txt 
 ```

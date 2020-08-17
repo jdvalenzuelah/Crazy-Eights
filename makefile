@@ -1,5 +1,5 @@
-TEST_DIR = ./game/test
-TEST_FILE_PATTERN = *_test.py
+TEST_DIR = game/test
+TEST_FILE_PATTERN = *_tests.py
 
 SERVER_DIR = service
 SERVER_HOST = 127.0.0.1
