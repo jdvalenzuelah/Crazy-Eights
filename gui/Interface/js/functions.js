@@ -1,15 +1,11 @@
 
 let username = ""
 let roomid = ""
+let started = false
 
 cards.init({table:'#card-table', type:STANDARD});
 
 deck = new cards.Deck();
-
-console.log('Adding click event:')
-deck.click(function(card){
-    console.log(card)
-})
 
 deck.x -= 50;
 
@@ -19,14 +15,33 @@ deck.render({immediate:true});
 upperhand = new cards.Hand({faceUp:false, y:60});
 lowerhand = new cards.Hand({faceUp:true,  y:340});
 
-console.log('Adding click event:')
+$('#deal').click(function(){
+    start_game()
+    $('#deal').hide()
+})
+
 lowerhand.click(function(card){
-    console.log(card)
+    if (card.suit == discardPile.topCard().suit
+        || card.rank == discardPile.topCard().rank
+        || card.rank == '8') {     
+		discardPile.addCard(card);
+		discardPile.render();
+        lowerhand.render();
+        eel.make_move(card.suit, card.rank)
+	}
+})
+
+deck.click(function(card){
+    eel.take_from_stack()
 })
 
 discardPile = new cards.Deck({faceUp:true});
 discardPile.x += 50;
 
+eel.expose(on_turn);
+function on_turn(card) {
+    alert('Your turn')
+}
 
 function login() {
     username = $("#username").val();
@@ -61,7 +76,8 @@ eel.expose(after_joined);
 function after_joined(room_id) {
     $('#new_room').addClass('hidden')
     $('#join_room').addClass('hidden')
-    $('#waiting').removeClass('hidden')
+    $('#card-table').removeClass('hidden')
+    $('#deal').addClass('hidden')
     update_room_id(room_id)
 }
 
@@ -69,7 +85,7 @@ eel.expose(after_created);
 function after_created(room_id) {
     $('#new_room').addClass('hidden')
     $('#join_room').addClass('hidden')
-    $('#start_game').removeClass('hidden')
+    $('#card-table').removeClass('hidden')
     update_room_id(room_id)
 }
 
@@ -77,7 +93,6 @@ function update_room_id(room_id) {
     roomid = room_id
     console.log('updating room id')
     document.getElementById('roomid1').innerText = `Room id: ${roomid}`
-    document.getElementById('roomid2').innerText = `Room id: ${roomid}`
 }
 
 function start_game() {
@@ -88,7 +103,6 @@ eel.expose(on_game_started);
 function on_game_started(player_deck, current_card) {
     $('#waiting').addClass('hidden')
     $('#start_game').addClass('hidden')
-    $('#card-table').removeClass('hidden')
     $('#cardimg').removeClass('hidden')
 
     let incomming_deck = parse_python_deck(player_deck).map(function(el){
@@ -102,13 +116,62 @@ function on_game_started(player_deck, current_card) {
     current_card = parse_python_card(current_card);
     current_card = new cards.Card(current_card.suit, current_card.rank)
 
-    deck.deal(5, [upperhand], 50, function() {
+    deck.deal(6, [upperhand], 50, function() {
         tempcard = deck.topCard()
         tempcard.rank = current_card.rank
         tempcard.suit = current_card.suit
 		discardPile.addCard(tempcard);
 		discardPile.render();
-    });       
+    });
+    
+    started = true
+}
+
+eel.expose(receive_card);
+function receive_card(current_card){
+    current_card = parse_python_card(current_card);
+    current_card = new cards.Card(current_card.suit, current_card.rank);
+
+    if(started) {
+        upperhand.addCard(deck.topCard())
+        new_card = upperhand.topCard()
+        new_card.suit = current_card.suit
+        new_card.rank= current_card.rank
+        discardPile.addCard(new_card);
+        discardPile.render();
+    }
+
+}
+
+eel.expose(on_stack_card)
+function on_stack_card(card){
+    new_card = parse_python_card(card)
+    new_card = new cards.Card(new_card.suit, new_card.rank);
+
+    temp_card = deck.topCard()
+    temp_card.suit = new_card.suit
+    temp_card.rank = new_card.rank
+
+    lowerhand.addCard(temp_card)
+    lowerhand.render()
+}
+
+$('#modal-change').click(function(){
+    var suit = $( "#suit option:selected" ).val();
+    var modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    eel.change_suit(suit)
+})
+
+eel.expose(on_suit_change)
+function on_suit_change() {
+    var modal = document.getElementById("myModal");
+    modal.style.display = "block";
+}
+
+eel.expose(alert_turn)
+function alert_turn() {
+    alert('Your turn!')
 }
 
 ranks_lookup = {
@@ -133,6 +196,8 @@ suits_lookup = {
     'hearts': 'h',
     'spades': 's'
 }
+
+
 function parse_python_deck(pdeck) {
     let trimmed = pdeck.replace('[', '').replace(']', '')
     let cards = trimmed.split(';')
@@ -153,5 +218,10 @@ function parse_python_card(pcard) {
 
 eel.expose(handle_error);
 function handle_error(err) {
-    console.error(err)
+    alert(err)
+}
+
+eel.expose(alert_winner)
+function alert_winner(winner) {
+    alert(`Game winner ${winner}`)
 }

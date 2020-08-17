@@ -212,13 +212,16 @@ class Server:
         else:
             self.send_turn(room_id)
         
-        self.send_move(room_id)
+        self.send_move(room_id, userid)
 
 
-    def send_move(self, room_id: str):
+    def send_move(self, room_id: str, userid: str):
         _, conns, current_state = self.get_players_deck(room_id)
         current_card = current_state.current_card
         for id in conns.keys():
+            if id == userid:
+                logging.debug(f'Skipping move maker {userid}')
+                continue
             logging.debug(f'sending move to {id}')
             res = self.format_response(Message(ServerMsgType.NEW_GAME_MOVE, {'card': current_card}))
             conns[id].sendall(res)

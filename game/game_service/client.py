@@ -52,9 +52,6 @@ class Client:
     def __exit__(self, type, value, traceback):
         self.close()
 
-    """
-    connect server
-    """
     def connect(self):
         self.socket.connect(self.server_info)
             
@@ -195,11 +192,18 @@ class Client:
         self._call_event('your_turn', current_card=self.current_card)
     
     def make_move(self, card: Card):
+        
+        for dcard in self.deck.cards:
+            if card.rank == dcard.rank and card.suit == dcard.suit:
+                card = dcard
+        
         if card in self.deck.cards:
             self.last_played_card = card
             self.deck.remove(card)
             req = self.format_request(Message(ClientMsgType.GAME_MOVE, {'card': card, 'roomid': self.room_id}))
             self.socket.sendall(req)
+        else:
+            logging.error(f"Unable to send move {card}")
     
     def take_from_stack(self):
         req = self.format_request(Message(ClientMsgType.GET_CARD_STACK, {'roomid':self.room_id}))
