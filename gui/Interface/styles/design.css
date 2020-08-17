@@ -54,3 +54,7 @@ a:visited {color:blue;}
 	left:310px;
 	top:170px;
 }
+
+.hidden {
+	display: none;
+}

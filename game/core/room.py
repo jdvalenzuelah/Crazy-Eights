@@ -1,13 +1,10 @@
 from .crazy_eights import CrazyEights
 from card_deck.card import Card
 from card_deck.suits import Suits
-from exceptions import *
+from .exceptions import *
 import collections
 
-"""
-TODO: Add game loop
-TODO: Keep track of scores and find room winner
-"""
+
 class Room():
 
     def __init__(self, rounds: int):
@@ -91,6 +88,13 @@ class Room():
         for name in self.players.keys():
             players[name] = self.game.get_player(self.game.get_playerid_from_username(name)).player_deck
         return players
+    
+    def get_room_winner(self):
+        if not self.is_room_rounds_completed():
+            raise RoomRoundsNotCompleted()
+        players = self.players
+        sorted = sorted(players.items(), key=lambda item: item[1])
+        return sorted[0][0]
 
 
 

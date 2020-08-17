@@ -16,6 +16,7 @@ class wrapper:
 		self.client = client
 
 cw = wrapper()
+<<<<<<< HEAD
 """
 send data to js
 """
@@ -92,6 +93,48 @@ if __name__ == "__main__":
 
 		client.game_started("")
 
+=======
+
+@eel.expose
+def login(username):
+	global cw
+	logging.debug(f'Username was passed {username}')
+	cw.client.register_user(username)
+
+@eel.expose
+def create_new_room(rounds):
+	global cw
+	logging.debug(f'Creating new room {rounds}')
+	cw.client.create_room(int(rounds))
+
+@eel.expose
+def join_room(roomid):
+	global cw
+	logging.debug(f'Joining new room {roomid}')
+	cw.client.join_room(roomid)
+
+def on_user_created(**kwargs):
+	logging.debug(f'User created {kwargs}')
+	eel.handle_login(kwargs['username'])
+
+def on_room_created(**kwargs):
+	logging.debug(f'Room created {kwargs}')
+	eel.go_to_room()
+
+def on_room_joined(**kwargs):
+	logging.debug(f'Joined new room {kwargs}')
+	eel.go_to_room()
+
+if __name__ == "__main__":
+	import sys
+	_, ip, port = sys.argv
+	
+	with Client(ip, int(port)) as client:
+		client.on('user_created', on_user_created)
+		client.on('room_created', on_room_created)
+		client.on('room_joined', on_room_joined)
+		
+>>>>>>> bc2a468d76751dfc58b53f5446b00a5201f11f62
 		client.connect()
 		
 		cw.set_client(client)

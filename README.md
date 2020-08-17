@@ -2,6 +2,10 @@
 
 > Python implementation of crazy eights card ganme
 
+## Requirements
+- Python 3.8+ (python3 command should point to python3.8)
+- make
+
 ## To run tests
 ```bash
 $ make test
@@ -35,4 +39,4 @@ $ make run-gui SERVER_HOST=<ip> SERVER_PORT=<port>
 
 ## Reference Interface
 Only the graphical interface and animation were taken from references for the implementation. 
-[Github-Interface](https://github.com/einaregilsson/cards.js)
+[card.js](https://github.com/einaregilsson/cards.js)
