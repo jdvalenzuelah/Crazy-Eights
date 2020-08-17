@@ -6,11 +6,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import socket
 import logging
-<<<<<<< HEAD
-=======
 from threading import Thread, Lock
 from .threaded import threaded
->>>>>>> bc2a468d76751dfc58b53f5446b00a5201f11f62
 from .client_msg_type import ClientMsgType
 from .server_msg_type import ServerMsgType
 from card_deck.deck import Deck
@@ -82,13 +79,6 @@ class Client:
     def format_request(self, req: Message) -> bytes:
         return serialize(req).encode(ENCONDING)
     
-<<<<<<< HEAD
-    def get_res_type(self, res: str) -> ServerMsgType:
-        res = res.split('.')
-        return ServerMsgType.from_string(res[0])
-    
-=======
->>>>>>> bc2a468d76751dfc58b53f5446b00a5201f11f62
 
     def register_user(self, userid: str):
 
@@ -162,28 +152,6 @@ class Client:
 
     
     def listen(self):
-<<<<<<< HEAD
-        while ( res := self.socket.recv(1024).decode(ENCONDING) ):
-            res_type = self.get_res_type(res)
-            if res_type == ServerMsgType.GAME_STARTED:
-                self.game_started(res)
-            elif res_type == ServerMsgType.YOUR_TURN:
-                self.game_turn(res)
-            elif res_type == ServerMsgType.STACK_CARD:
-                self.receive_stack_card(res)
-            elif res_type == ServerMsgType.SUIT_NEEDS_CHANGE:
-                self.on_needs_suit_change(res)
-            elif res_type == ServerMsgType.SUIT_CHANGE:
-                self.on_suit_change(res)
-    
-    def game_started(self, data):
-        
-
-        deck = Deck.parse(data[data.find('['):data.find(']')+1])
-        current_card = Card.parse(f"{data.split(',')[-2]},{data.split(',')[-1]}")
-        self.deck = deck
-        self.current_card = current_card
-=======
         logging.info('Listening for message from server')
         while ( res := self.socket.recv(1024) ):
             if not res:
@@ -219,7 +187,6 @@ class Client:
     def game_started(self, **kwargs):
         self.deck = kwargs['deck']
         self.current_card = kwargs['current_card']
->>>>>>> bc2a468d76751dfc58b53f5446b00a5201f11f62
         self._call_event('game_started', deck=self.deck, current_card=self.current_card)
 
     
