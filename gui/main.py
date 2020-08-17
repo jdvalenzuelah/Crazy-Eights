@@ -158,8 +158,8 @@ if __name__ == "__main__":
 		client.on('stack_card', on_stack_card)
 		client.on('needs_suit_change', on_suit_change)
 		client.on('game_finished', on_game_finished)
-        client.on('room_winner', on_room_winner)
-        client.on('error', on_error)
+		client.on('room_winner', on_room_winner)
+		client.on('error', on_error)
 		
 		client.connect()
 		

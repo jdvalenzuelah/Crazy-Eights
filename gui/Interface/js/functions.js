@@ -76,7 +76,8 @@ eel.expose(after_joined);
 function after_joined(room_id) {
     $('#new_room').addClass('hidden')
     $('#join_room').addClass('hidden')
-    $('#waiting').removeClass('hidden')
+    $('#card-table').removeClass('hidden')
+    $('#deal').addClass('hidden')
     update_room_id(room_id)
 }
 
@@ -92,7 +93,6 @@ function update_room_id(room_id) {
     roomid = room_id
     console.log('updating room id')
     document.getElementById('roomid1').innerText = `Room id: ${roomid}`
-    document.getElementById('roomid2').innerText = `Room id: ${roomid}`
 }
 
 function start_game() {
