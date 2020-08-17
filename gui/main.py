@@ -35,18 +35,11 @@ def join_room(roomid):
 	logging.debug(f'Joining new room {roomid}')
 	cw.client.join_room(roomid)
 
-<<<<<<< HEAD
-
-def gui_deck(**kwargs):
-	logging.debug(f'deck {kwargs}')
-	eel.deck(kwargs['deck'])
-=======
 @eel.expose
 def start_game():
 	global cw
 	logging.debug('Starting game')
 	cw.client.start_game()
->>>>>>> 91bc60f042b8b911ff3614b03951b89d8b0d6179
 
 def on_user_created(**kwargs):
 	logging.debug(f'User created {kwargs}')
@@ -70,8 +63,6 @@ def on_game_started(**kwargs):
 
 def on_turn(**kwargs):
 	logging.debug(f'Your turn {kwargs}')
-
-
 
 
 
