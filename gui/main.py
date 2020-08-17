@@ -69,8 +69,9 @@ def make_move(suit, rank):
 	rank = Ranks.from_string(ranks_js[rank])
 	card_server = Card(rank, suit)
 	logging.debug(f'Card in turn: {card_server}')
-	cw.client.make_move(card_server)
 	logging.debug(f'Received move from ui: {suit} {rank}')
+	cw.client.make_move(card_server)
+
 
 @eel.expose
 def take_from_stack(suit, rank):
@@ -109,7 +110,8 @@ def on_game_started(**kwargs):
 def on_turn(**kwargs):
 	logging.debug(f'Your turn {kwargs}')
 	card = kwargs['current_card'].serialize()
-	#eel.on_turn(card)
+	#logging.debug(f'current_card {card}')
+	eel.receive_card(card)
 
 @threaded
 def start():

@@ -130,6 +130,17 @@ function on_game_started(player_deck, current_card) {
     });       
 }
 
+eel.expose(receive_card);
+function receive_card(current_card){
+    current_card = parse_python_card(current_card);
+    current_card = new cards.Card(current_card.suit, current_card.rank);
+    console.log(current_card);
+
+    current_card.showCard();
+
+    
+}
+
 ranks_lookup = {
     'A': '1',
     '2': '2',
