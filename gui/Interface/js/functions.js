@@ -6,11 +6,6 @@ cards.init({table:'#card-table', type:STANDARD});
 
 deck = new cards.Deck();
 
-console.log('Adding click event:')
-deck.click(function(card){
-    console.log(card)
-})
-
 deck.x -= 50;
 
 deck.addCards(cards.all);
@@ -19,14 +14,29 @@ deck.render({immediate:true});
 upperhand = new cards.Hand({faceUp:false, y:60});
 lowerhand = new cards.Hand({faceUp:true,  y:340});
 
-console.log('Adding click event:')
+$('#deal').click(function(){
+    start_game()
+    $('#deal').hide()
+})
+
 lowerhand.click(function(card){
-    console.log(card)
+    if (card.suit == discardPile.topCard().suit
+        || card.rank == discardPile.topCard().rank
+        || card.rank == '8') {     
+		discardPile.addCard(card);
+		discardPile.render();
+        lowerhand.render();
+        eel.make_move(card.suit, card.rank)
+	}
 })
 
 discardPile = new cards.Deck({faceUp:true});
 discardPile.x += 50;
 
+eel.expose(on_turn);
+function on_turn(card) {
+    alert('Your turn')
+}
 
 function login() {
     username = $("#username").val();
@@ -69,7 +79,7 @@ eel.expose(after_created);
 function after_created(room_id) {
     $('#new_room').addClass('hidden')
     $('#join_room').addClass('hidden')
-    $('#start_game').removeClass('hidden')
+    $('#card-table').removeClass('hidden')
     update_room_id(room_id)
 }
 
@@ -88,7 +98,6 @@ eel.expose(on_game_started);
 function on_game_started(player_deck, current_card) {
     $('#waiting').addClass('hidden')
     $('#start_game').addClass('hidden')
-    $('#card-table').removeClass('hidden')
     $('#cardimg').removeClass('hidden')
 
     let incomming_deck = parse_python_deck(player_deck).map(function(el){

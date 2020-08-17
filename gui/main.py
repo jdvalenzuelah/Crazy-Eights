@@ -3,6 +3,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from game.game_service.client import Client
+from game.game_service.threaded import threaded
 import logging
 import eel
 
@@ -36,10 +37,15 @@ def join_room(roomid):
 	cw.client.join_room(roomid)
 
 @eel.expose
+def make_move(suit, rank):
+	global cw
+	logging.debug(f'Received move from ui: {suit} {rank}')
+
+@eel.expose
 def start_game():
 	global cw
 	logging.debug('Starting game')
-	cw.client.start_game()
+	eel.spawn(start)
 
 def on_user_created(**kwargs):
 	logging.debug(f'User created {kwargs}')
@@ -63,6 +69,13 @@ def on_game_started(**kwargs):
 
 def on_turn(**kwargs):
 	logging.debug(f'Your turn {kwargs}')
+	card = kwargs['current_card'].serialize()
+	#eel.on_turn(card)
+
+@threaded
+def start():
+	global cw
+	cw.client.start_game()
 
 if __name__ == "__main__":
 	import sys
@@ -80,4 +93,7 @@ if __name__ == "__main__":
 		cw.set_client(client)
 
 		eel.init('gui/Interface')
-		eel.start('index.html')
+		eel.start('index.html', block=False)
+		while True:
+			print("I'm a main loop")
+			eel.sleep(1.0)

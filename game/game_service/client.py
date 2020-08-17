@@ -52,9 +52,6 @@ class Client:
     def __exit__(self, type, value, traceback):
         self.close()
 
-    """
-    connect server
-    """
     def connect(self):
         self.socket.connect(self.server_info)
             
