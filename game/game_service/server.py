@@ -5,17 +5,17 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import socket
 import logging
 from threading import Thread, Lock
-from threaded import threaded
+from .threaded import threaded
 import queue
 import uuid
-from client_msg_type import ClientMsgType
-from server_msg_type import ServerMsgType
+from .client_msg_type import ClientMsgType
+from .server_msg_type import ServerMsgType
 from core.room import Room
 from card_deck.card import Card
 from card_deck.suits import Suits
-import protocol
-from message import Message
-from room_server import RoomServer
+from .protocol import *
+from .message import Message
+from .room_server import RoomServer
 from core.exceptions import *
 
 logging.basicConfig(level=logging.DEBUG)
@@ -68,10 +68,10 @@ class Server:
     
     def parse_request(self, req: bytes) -> Message:
         req = req.decode(ENCONDING)
-        return protocol.parse_message(req)
+        return parse_message(req)
     
     def format_response(self, message: Message) -> bytes:
-        res = protocol.serialize_server_msg(message.type, **message.data)
+        res = serialize_server_msg(message.type, **message.data)
         return res.encode(ENCONDING)
 
     @threaded
@@ -112,7 +112,7 @@ class Server:
                         logging.error(e)
                         self._send_error(e, conn)
     
-    def _send_error(e: Exception, conn):
+    def _send_error(self, e: Exception, conn):
         if isinstance(e, GameException):
             res = Message(ServerMsgType.ERROR, {'code': e.code, 'description': str(e)})
         else:
@@ -263,9 +263,3 @@ class Server:
     def close(self):
         logging.debug('closing connection')
         self.socket.close()
-
-if __name__ == "__main__":
-    import sys
-    _, ip, port = sys.argv
-    with Server(ip, int(port)) as server:
-        server.start()

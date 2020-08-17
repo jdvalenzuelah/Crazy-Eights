@@ -2,6 +2,9 @@ const STANDARD = 0;
 const EUCHRE = 1;
 const PINOCHLE = 2;
 
+
+
+
 var cards = (function() {
   //The global options
   var opt = {
@@ -309,6 +312,29 @@ var cards = (function() {
 
     toString: function() {
       return 'Deck';
+    },
+    
+    add_specific: function(hand, speed, icards, callback) {
+      var i = 0;
+      var me = this
+      function deal_hand() {
+          if(icards.length == 0 || i == icards.length) {
+            if(callback){
+              callback()
+            }
+              return;
+          }
+          card = me.topCard();
+          card.suit = icards[i].suit;
+          card.rank = icards[i].rank;
+          hand.addCard(card);
+          hand.render({
+              callback: deal_hand,
+              speed: speed
+          })
+          i++
+      }
+      deal_hand();
     },
 
     deal: function(count, hands, speed, callback) {

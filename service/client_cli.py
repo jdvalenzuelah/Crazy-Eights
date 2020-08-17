@@ -1,7 +1,10 @@
-from client import Client
-from card_deck.suits import Suits
 import logging
+import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+from game.game_service.client import Client
+from card_deck.suits import Suits
 
 #logging.basicConfig(level=logging.DEBUG)
 
