@@ -30,6 +30,16 @@ lowerhand.click(function(card){
 	}
 })
 
+/** IN PROCESS xD
+deck.click(function(card){
+    if(card == deck.topCard()){
+        lowerhand.addCard(deck.topCard());
+        lowerhand.render();
+        //eel.take_from_stack(card.suit, card.rank)
+    }
+})
+**/
+
 discardPile = new cards.Deck({faceUp:true});
 discardPile.x += 50;
 
@@ -142,6 +152,8 @@ suits_lookup = {
     'hearts': 'h',
     'spades': 's'
 }
+
+
 function parse_python_deck(pdeck) {
     let trimmed = pdeck.replace('[', '').replace(']', '')
     let cards = trimmed.split(';')
@@ -159,6 +171,8 @@ function parse_python_card(pcard) {
         rank: ranks_lookup[splited[0]]
     }
 }
+
+
 
 eel.expose(handle_error);
 function handle_error(err) {

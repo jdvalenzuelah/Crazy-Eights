@@ -192,10 +192,13 @@ class Client:
         self._call_event('your_turn', current_card=self.current_card)
     
     def make_move(self, card: Card):
+        logging.debug(f'CARDS: {card}')
+        logging.debug(f'DECKS CARDS {self.deck.cards}')
         if card in self.deck.cards:
             self.last_played_card = card
             self.deck.remove(card)
             req = self.format_request(Message(ClientMsgType.GAME_MOVE, {'card': card, 'roomid': self.room_id}))
+            logging.debug(f'Card: {req}')
             self.socket.sendall(req)
     
     def take_from_stack(self):
