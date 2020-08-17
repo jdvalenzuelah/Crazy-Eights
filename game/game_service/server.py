@@ -112,7 +112,7 @@ class Server:
                         logging.error(e)
                         self._send_error(e, conn)
     
-    def _send_error(e: Exception, conn):
+    def _send_error(self, e: Exception, conn):
         if isinstance(e, GameException):
             res = Message(ServerMsgType.ERROR, {'code': e.code, 'description': str(e)})
         else:
