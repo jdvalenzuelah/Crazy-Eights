@@ -313,6 +313,29 @@ var cards = (function() {
     toString: function() {
       return 'Deck';
     },
+    
+    add_specific: function(hand, speed, icards, callback) {
+      var i = 0;
+      var me = this
+      function deal_hand() {
+          if(icards.length == 0 || i == icards.length) {
+            if(callback){
+              callback()
+            }
+              return;
+          }
+          card = me.topCard();
+          card.suit = icards[i].suit;
+          card.rank = icards[i].rank;
+          hand.addCard(card);
+          hand.render({
+              callback: deal_hand,
+              speed: speed
+          })
+          i++
+      }
+      deal_hand();
+    },
 
     deal: function(count, hands, speed, callback) {
       var me = this;
@@ -396,20 +419,4 @@ var cards = (function() {
 
 if (typeof module !== 'undefined') {
   module.exports = cards;
-}
-
-eel.expose(deck);
-function deck(deck){
-  console.debug(`your deck is ${deck}`)
-}
-
-eel.expose(current_card);
-function current_card(current_card){
-  console.debug(`current card is ${current_card}`)
-}
-
-eel.expose(stack_card);
-function stack_card(new_card){
-  console.debug(`current card is ${new_card}`)
-
 }
