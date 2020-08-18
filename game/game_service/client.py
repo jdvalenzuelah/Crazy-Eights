@@ -44,7 +44,7 @@ class Client:
         }
         self._res_queue = []
         self.queue_mutex = Lock()
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = socket.socket()
     
     def __enter__(self):
         return self

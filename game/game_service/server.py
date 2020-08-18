@@ -51,7 +51,7 @@ class Server:
             self.handle_request()
     
     def set_up_socket(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.socket = socket.socket()
         self.socket.bind( self.server_info )
         self.socket.listen()                     
     
