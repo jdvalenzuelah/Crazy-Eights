@@ -6,6 +6,6 @@ from game.game_service.server import Server
 
 if __name__ == "__main__":
     import sys
-    _, ip, port = sys.argv
-    with Server(ip, int(port)) as server:
+    _, port = sys.argv
+    with Server(int(port)) as server:
         server.start()

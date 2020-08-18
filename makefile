@@ -14,7 +14,7 @@ test:
 	python3 -m unittest discover -s ${TEST_DIR} -p "${TEST_FILE_PATTERN}"
 
 run-server:
-	python3 ${SERVER_DIR}/server.py ${SERVER_HOST} ${SERVER_PORT}
+	python3 ${SERVER_DIR}/server.py ${SERVER_PORT}
 
 run-client:
 	python3 ${CLIENT_DIR}/client_cli.py ${SERVER_HOST} ${SERVER_PORT} ${USERNAME}

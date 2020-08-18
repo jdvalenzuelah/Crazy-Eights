@@ -24,7 +24,8 @@ ENCONDING = 'utf-8'
 
 class Server:
 
-    def __init__(self, host: str, port: int):
+    def __init__(self, port: int):
+        host = socket.gethostname()
         self.server_info = (host, int(port))
 
         self.conn_queue = queue.Queue()
